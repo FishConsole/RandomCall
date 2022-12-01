@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" />
+    <title>Document</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/css/mdui.min.css"
+        integrity="sha384-cLRrMq39HOZdvE0j6yBojO4+1PrHfB7a9l5qLcmRm/fiWXYY+CndJPmyu5FV/9Tw" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js"
+        integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A"
+        crossorigin="anonymous"></script>
+
+
+    <style>
+        * {
+            transition: 0.4s all ease-in-out;
+            user-select: none;
+            font-weight: 400;
+
+        }
+
+        iframe {
+            position: fixed;
+            left: 300vw;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5001;
+        }
+
+        .子页面按钮 {
+            z-index: 5002;
+            height: 0px;
+            width: 0px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: rgb(112, 157, 255);
+            border: 0;
+            position: fixed;
+            bottom: 50px;
+            color: #00020695;
+            right: 9vw;
+            box-shadow: 2px 2px 12px #697380bd;
+            line-height: 60px;
+            text-align: center;
+        }
+
+
+        .mdui-btn-raised {
+            box-shadow: 0 0px 0px 0px rgb(0 0 0 / 0%), 0 1px 3px 0 rgb(0 0 0 / 14%), 0 2px 1px 0 rgb(0 0 0 / 12%);
+        }
+
+        .mdui-menu {
+            margin: 43px -11px;
+            border-radius: 18px;
+            padding: 3px 0 3px;
+            background-color: #ecf4f8;
+            box-shadow: 0 3px 6px 0px rgba(26, 27, 51, 0.212);
+
+        }
+
+        .运行条 {
+            position: fixed;
+            top: 93vh;
+            left: 29vw;
+            z-index: 2;
+            width: 40vw;
+        }
+
+        .应用栏 {
+            z-index: 3;
+        }
+
+        .题目展示框 {
+            min-height: 74px;
+            min-width: 37px;
+        }
+
+        .抽屉栏_标题 {
+            margin: 20% 27px;
+            font-weight: 520;
+            font-size: 26px;
+            z-index: 1;
+            position: absolute;
+        }
+
+        .抽屉栏_标题_分割线 {
+            border: 0.5px solid #cfbcbc;
+            background: #cfbcbc;
+            margin-bottom: 16px;
+            margin-left: 17px;
+            width: 77%;
+        }
+
+        .开始抽背 {
+            height: 90vh;
+            width: 196px;
+        }
+
+
+
+        .点火器 {
+            margin-right: -1.25vh;
+            margin-top: 8vw;
+            margin-bottom: 5vw;
+        }
+
+        .点火器>button {
+            background-color: #98afcf7a;
+            font-weight: bold;
+            font-size: 13px;
+            height: 72px;
+            color: #434368d6;
+            float: right;
+        }
+
+        .点火器>button:hover {
+            background-color: #98afcf88;
+        }
+
+        .点火器>button:active {
+            background-color: #1f3f6f48 !important;
+        }
+
+        .题目展示框>div {
+            width: 48vw;
+            display: block;
+            background: #bacbd5;
+            padding: 20px 10px 20px 10px;
+            border-radius: 25px;
+            /* height: 23px; */
+            position: relative;
+            left: 39.5vw;
+            top: 84px;
+        }
+
+        .fish {
+            height: 361px;
+            width: 100%;
+            background: url(../../fish.png) no-repeat center;
+            background-size: 75%;
+            margin: 0 auto;
+            margin-top: -2vw;
+        }
+
+
+        .抽屉栏_内容>li>div {
+            font-weight: bold !important;
+            font-size: 13px !important;
+            margin-left: 15px;
+            margin-top: 1px;
+        }
+
+        .mdui-list-item:hover {
+            background-color: rgb(94 137 190 / 20%);
+        }
+
+        .mdui-drawer {
+            display: block;
+        }
+
+
+        .mdui-drawer-close {
+            width: 0px;
+            transform: translateX(-40px) !important;
+        }
+
+        .mdui-dialog-alert {
+            border-radius: 20px;
+        }
+
+        .mdui-snackbar {
+            margin-top: 5px;
+            border-radius: 4px;
+            box-shadow: 0px 3px 12px rgba(87, 87, 87, 0.638);
+        }
+
+        .mdui-overlay {
+            background: #4242423b;
+        }
+
+        .mdui-dialog>.mdui-dialog-title {
+            padding: 36px 24px 20px 25px;
+        }
+
+        .mdui-dialog-actions {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            padding: 8px 35px 15px 8px;
+            text-align: right;
+        }
+
+        .mdui-dialog-actions .mdui-btn:first-child {
+            margin-left: 0;
+            margin-top: -3vw;
+        }
+
+        .mdui-btn {
+            border-radius: 25px;
+            margin-right: 8px;
+            margin-bottom: 16px;
+        }
+
+        .mdui-dialog-actions>a {
+            background: #f0f2ff;
+            color: #5f6d8a !important;
+        }
+
+        .mdui-typo a {
+            color: #5f6d8a !important;
+        }
+
+        .mdui-typo a::before {
+            background-color: #5f6d8a;
+        }
+
+        .对话框图标 {
+            font-size: 36px;
+            margin-left: 19px;
+            margin-top: 0px;
+            margin-bottom: 16px;
+        }
+
+
+
+        .div {
+            background: #c9ebff;
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            top: 7px;
+            left: 24px;
+            border-radius: 45%;
+            animation-name: rotate;
+            animation-duration: 10s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+
+        .mdui-dialog>.mdui-dialog-title {
+            padding: 36px 24px 20px 25px;
+            margin-left: 33%;
+            font-size: 24px;
+            font-weight: 400;
+        }
+
+
+        .div_a {
+            background: #e2f4ff;
+            position: absolute;
+            top: 9px;
+            left: 14px;
+            animation-delay: 1.5s;
+        }
+
+
+
+        .动画 {
+            overflow: hidden;
+            height: 114px;
+
+        }
+
+        .抽屉栏_内容>li {
+            width: 94%;
+            margin: 16px auto;
+            border-radius: 25px;
+        }
+
+        .计数器 {
+            height: 0;
+            position: fixed;
+            border-radius: 23px;
+            left: 41.5vw;
+            bottom: 138px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            transition: 0.31s all cubic-bezier(0.36, 0.31, 0, 1.05);
+        }
+
+        .计数器:active {
+            box-shadow: 2px 2px 12px #93a1b5;
+        }
+
+
+
+        @keyframes rotate {
+            from {
+                transform: translate(-50%, 0) rotateZ(0deg);
+            }
+
+            to {
+                transform: translate(-50%, 0%) rotateZ(360deg);
+            }
+        }
+
+
+        .主页_card {
+            background-color: #dfe7ef;
+            width: 90%;
+            position: relative;
+            top: 82px;
+            height: 22vh;
+            left: 2%;
+            padding: 20px 0px 30px 20px;
+            border-radius: 20px;
+            color: #334481;
+        }
+
+
+
+        .主页_card>h2 {
+            font-weight: bold;
+            position: relative;
+            top: -25px;
+            left: 22px;
+            font-size: 30px;
+            margin-bottom: -16px;
+        }
+
+        .主页_生成器范围 {
+            /* width: 75%;
+            max-width: 75vw; */
+            position: relative;
+            top: 86px;
+            left: 5px;
+        }
+
+        .主页_生成器范围_序列 {
+            color: #4f6aab;
+            width: 20px;
+            padding: 11px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 20px;
+            margin-top: 12px;
+            margin-left: -19px;
+        }
+
+        .主页_生成器框架_题目与答案 {
+            left: 40px;
+            height: 27px;
+            position: relative;
+            width: 85vw;
+            top: -57px;
+        }
+
+        .主页_生成器框架_题目与答案>input {
+            display: inline-block;
+            width: 18vw;
+            height: 23px;
+            border-radius: 10px;
+            position: relative;
+            margin-right: 45px;
+            left: 18px;
+            color: #413c9e;
+            padding-left: 16px;
+            font-weight: bolder;
+            font-size: 14px;
+            border: 2px solid;
+            outline: none
+        }
+
+        .主页_生成器框架_题目与答案>input:active {
+            color: #413c9e;
+            border: 2px solid;
+        }
+
+
+        ::-webkit-scrollbar {
+            display: none;
+            /* Chrome Safari */
+        }
+
+        .主页_生成器框架_选项填写框 {
+            background-color: #b1c2ce;
+            width: 101%;
+            height: 100%;
+            position: relative;
+            top: -7vh;
+            left: -2.1vw;
+            border-radius: 20px;
+            overflow: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+        }
+
+        .主页_生成器框架_选项填写框>textarea {
+            background-color: #b1c2ce;
+            display: inline-block;
+            width: 355px;
+            height: 132px;
+            border-radius: 20px;
+            padding: 10px;
+            resize: none;
+            outline: none;
+            user-select: auto;
+            border: 0;
+        }
+
+        .主页_生成器框架_选项填写框>textarea:hover {
+            background-color: #8c98a0ba;
+        }
+
+        .主页_生成器框架_选项填写框_浮动操作栏 {
+            background-color: #21305d69;
+            position: relative;
+            top: -8px;
+            left: 64vw;
+            border-radius: 15px;
+            color: white;
+            z-index: 2;
+            padding: 4px;
+            width: 71px;
+            text-align: center;
+        }
+
+        .主页_生成器框架_选项填写框_浮动操作栏>i {
+            padding: 0px;
+            font-size: 19px;
+            height: 21px;
+            width: 21px;
+            margin: 0 auto;
+            border-radius: 13px;
+            line-height: 1.2;
+        }
+
+        .主页_生成器框架_选项填写框_浮动操作栏>i:hover {
+            background-color: #1f3f6f48;
+        }
+
+        .mdui-dialog-confirm {
+            border-radius: 20px;
+        }
+
+        .mdui-dialog-actions .mdui-btn:first-child {
+            margin-left: 0;
+            margin-top: 0vw;
+        }
+    </style>
+</head>
+
+<script>
+    // 工具
+    function isNull(value) {
+        if (!value && typeof value != "undefined" && value != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    let count = 0;
+    const 防抖 = (callback) => {
+        let time = 0;
+        return () => {
+            const now = Date.now();
+            const diff = (now - time) / 1000;
+            if (diff > 0.0) {
+                callback();
+                time = now;
+            }
+        }
+    }
+</script>
+<script>
+    // mdui相关
+    var $ = mdui.$;
+    function 对话框(内容) {
+        mdui.alert(内容, '<div><i class="mdui-icon material-icons 对话框图标">all_out</i></div>' + 程序名());
+    }
+
+
+
+    function snackbar(内容) {
+            mdui.snackbar({ message: 内容, position: 'top' })
+    }
+
+    function 运行条的提示() {
+        运行条.style.cssText = 'display:block';
+        setTimeout(function () {
+            运行条.style.cssText = 'display:none';
+        }, 2000)
+    }
+</script>
+<script>
+    // 程序标识定义
+    function 版本号() {
+        return '20221127.10'
+    }
+
+    function 程序名() {
+        return 'Maybe'
+    }
+
+    // 将本地存储的原始数据源放入会话存储，到时候操作的时候就同步操作会话存储
+    本地存储 = localStorage.getItem('RandomCall_original')
+    if (本地存储 != null) {
+        sessionStorage.setItem('RandomCall_original_backup', 本地存储)
+    }
+</script>
+
+
+<body class="mdui-color-theme-50" id="body">
+    <!-- 顶栏 -->
+
+    <!-- 顶栏 -->
+    <div class="mdui-toolbar mdui-appbar-fixed 应用栏 mdui-color-light-blue-50">
+
+        <a href="javascript:;" class="mdui-typo-headline">Maybe</a>
+        <div class="mdui-toolbar-spacer"></div>
+        <a href="javascript:;" class="mdui-btn mdui-btn-icon" onclick="添加(插入模式 = true)">
+            <i class="mdui-icon material-icons">add_box</i>
+        </a>
+        <a href="javascript:;" class="mdui-btn mdui-btn-icon">
+            <i class="mdui-icon material-icons" onclick="重载()">refresh</i>
+        </a>
+        <a href="javascript:;" class="mdui-btn mdui-btn-icon">
+            <i class="mdui-icon material-icons" onclick="保存()">save</i>
+        </a>
+    </div>
+    </div>
+
+
+
+
+    <div class="主页_card mdui-typo mdui-ripple">
+        <h2>Whats is this ?</h2>
+        <p style="width:79%;position:relative;left:21px;">
+            这是Maybe的一个配置文件编辑器，你可以将你的配置文件导入到这里，我会生成对应的内容来辅助你编辑<b>这个板块还在开发，很多功能都没做，所以大部分按键你点了是没用的，就算了点了也是白点</b></p>
+    </div>
+
+
+    <div class="主页_生成器范围 mdui-container" id="主页_生成器范围"></div>
+    <!-- 使用script嵌套，根据规则自动生成script来进行操作 -->
+
+    <script>
+        // 启动时先从长期存储中导入数据到会话存储
+        // 如果长期存储中没用内容则不管
+
+
+
+        // console.log(数据.数据源_修改.修改_答案(1, '这是一个被修改的测试答案'))
+        // console.log(数据.数据源_修改.修改_题目(1, '这是一个被修改的测试题目'))
+        console.log()
+
+
+
+        var 悬浮执行器 = {
+            增加: function (位置信息) {
+                snackbar('悬浮执行器接受指令_增加，所指向的位置为' + 位置信息)
+                被增加 = document.getElementById('选项填写框_' + 位置信息)
+                准备编号 = 被增加.children.length + 1
+                内容 = '<textarea class="mdui-ripple" onclick="项目选中器(' + 准备编号 + ')" id="选项填写框_' + 位置信息 + '_' + 准备编号 + '" onchange=数据.数据源_修改.修改_选项.修改('+位置信息+',value)>' + '选项' + 准备编号 + '</textarea>'
+                被增加.innerHTML += 内容
+            },
+            删除: function (位置信息) {
+                锁定位置 = sessionStorage.getItem("RandomCall_Currentclick")
+                sessionStorage.setItem("RandomCall_Currentclick",null)
+                被删除 = document.getElementById('选项填写框_' + 位置信息 + '_' + 锁定位置)
+                try {
+                    被删除.style.cssText = 'background:#a99191'
+                } catch (TypeError) {
+                    对话框('请先选中再删除')
+                    return 0
+                }
+                被删除的值 = 被删除.value
+                snackbar('选项：' + 被删除的值 + '已被删除')
+                setTimeout(function () {
+                    被删除.remove()
+                }, 700)
+            }, 清空: function (位置信息) {
+                锁定位置 = '主页_生成器范围_序列_' + 位置信息
+                console.log(锁定位置)
+                被删除 = document.getElementById(锁定位置)
+                snackbar('编号：' + 位置信息 + '已被删除')
+                setTimeout(function () {
+                    被删除.remove();
+                }, 700)
+            }
+        }
+
+
+        function 项目选中器(位置信息) {
+            snackbar('指定项目被选中，这个位置是' + 位置信息)
+            sessionStorage.setItem("RandomCall_Currentclick", 位置信息)
+        }
+    </script>
+    <script>
+        function 滚动到页面最底() {
+            var 高度 = document.body.clientHeight;
+            setTimeout(function () {
+                window.scroll({ top: 高度, left: 0, behavior: 'smooth' });
+            }, 400)
+        }
+
+        function 添加(插入模式 = true) {
+            // 如果关闭了插入模式，那么生成对应的数据并添加对应的编号，全部完事后存编
+            // 号到会话存储，没有数据源就提示一下就结束了
+
+            // 如果保持插入模式的开启，添加的内容就是数据源生成的内容在会话存储中添加后的
+            // 内容往后加
+
+            // 用户离开便清除
+            主页生成器范围 = document.getElementById('主页_生成器范围')
+            编号 = Number(sessionStorage.getItem("RandomCall_SerialNumber"))
+            if (插入模式) {
+                if (编号 == null) {
+                    编号 = 0
+                    sessionStorage.setItem("RandomCall_SerialNumber", 0)
+                }
+
+                temp = '\
+        <div id="主页_生成器范围_序列_'+ 编号 + '">\
+            <p class="主页_生成器范围_序列">'+ 编号 + '</p>\
+            <div class="主页_生成器框架_题目与答案"><input type="text" value="题目">\
+            <input type="text" value="答案"></div>\
+            <div class="主页_生成器框架_选项填写框_浮动操作栏">\
+                <i class="mdui-icon material-icons mdui-ripple" onclick="悬浮执行器.增加('+ 编号 + ')">add</i>\
+                <i class="mdui-icon material-icons mdui-ripple" onclick="悬浮执行器.删除('+ 编号 + ')">clear</i>\
+                <i class="mdui-icon material-icons mdui-ripple" onclick="悬浮执行器.清空('+ 编号 + ')">clear_all</i>\
+            </div>\
+            <div class="主页_生成器框架_选项填写框" id="选项填写框_'+ 编号 + '">\
+                <textarea class="mdui-ripple" onclick="项目选中器(1)" id="选项填写框_'+ 编号 + '_1" onchange="snackbar(value)">选项1</textarea>\
+                <textarea class="mdui-ripple" onclick="项目选中器(2)" id="选项填写框_'+ 编号 + '_2" onchange="snackbar(value)">选项2</textarea>\
+                <textarea class="mdui-ripple" onclick="项目选中器(3)" id="选项填写框_'+ 编号 + '_3" onchange="snackbar(value)">选项3</textarea>\
+            </div>\
+        </div>'
+                主页生成器范围.innerHTML += temp
+                编号 = 编号 + 1
+                sessionStorage.setItem("RandomCall_SerialNumber", 编号)
+                snackbar('操作完成')
+                滚动到页面最底()
+                return 0
+
+            } else {
+                数据 = eval(localStorage.getItem("RandomCall_data"))
+                输出存储器 = ''
+                for (a = 0; a < 数据.length; a++) {
+                    题目 = 数据[a][0]
+                    答案 = 数据[a][数据[a].length - 1]
+                    选项 = 数据[a].slice(1, -1)
+                    选项存储器 = ''
+                    for (选项项目 = 0; 选项项目 < 选项.length; 选项项目++) {
+                        选项存储器 += '<textarea class="mdui-ripple" onclick="项目选中器(' + 选项项目 + ')" id="选项填写框_' + a + '_' + 选项项目 +'" onchange=数据.数据源_修改.修改_选项.修改('+a+',value)>' + 选项[选项项目] + '</textarea>'
+                    }
+                    输出存储器 += '\
+        <div id="主页_生成器范围_序列_'+ a + '">\
+            <p class="主页_生成器范围_序列">'+ a + '</p>\
+            <div class="主页_生成器框架_题目与答案"><input type="text" value="'+ 题目 + '">\
+            <input type="text" value="'+ 答案 + '"></div>\
+            <div class="主页_生成器框架_选项填写框_浮动操作栏">\
+                <i class="mdui-icon material-icons mdui-ripple" onclick="悬浮执行器.增加('+ a + ')">add</i>\
+                <i class="mdui-icon material-icons mdui-ripple" onclick="悬浮执行器.删除('+ a + ')">clear</i>\
+                <i class="mdui-icon material-icons mdui-ripple" onclick="悬浮执行器.清空('+ a + ')">clear_all</i>\
+            </div>\
+            <div class="主页_生成器框架_选项填写框" id="选项填写框_'+ a + '">' + 选项存储器 + '</div>\
+        </div>'
+                }
+            }
+            主页生成器范围.innerHTML += 输出存储器
+            sessionStorage.setItem("RandomCall_SerialNumber", a)
+            滚动到页面最底()
+
+
+        }
+        // 第一次启动就启动这个，这样首页才有数据
+        添加(false)
+        // 第一次启动删除会话存储的东西以免误判
+        sessionStorage.setItem("RandomCall_Currentclick", null)
+
+
+        function 重载() {
+            mdui.confirm('真的要重载吗？重载后，您未保存的数据将会永久消失',
+                function () {
+                    本地存储 = localStorage.getItem('RandomCall_original')
+                    if (isNull(本地存储)) {
+                        sessionStorage.setItem('RandomCall_original_backup', null)
+                    }
+                    sessionStorage.setItem('RandomCall_Currentclick', null)
+                    主页生成器范围 = document.getElementById('主页_生成器范围')
+                    主页生成器范围.innerHTML = ''
+                    添加(false)
+                    snackbar('重载完成')
+                    滚动到页面最底()
+                },
+                function () {
+                    return 0
+                }
+            );
+        }
+
+
+
+
+
+
+
+
+        function 保存() {
+            snackbar('这是保存器，他现在没用什么卵用')
+        }
+
+                数据 = {
+            数据解析: {
+                转数组: function (数据源) {
+                    // '8＋7＝'-'12'-'15'-'1'-'11'-'15'转数组
+                    转换后的数据源 = 数据源
+                    a = 转换后的数据源.split("'-'")
+                    a[0] = a[0].slice(1, a.length)
+                    a[a.length - 1] = a[a.length - 1].slice(0, -1)
+                    return a
+                },
+                转字符串: function (数据源) {
+                    // 把字符串按规则转数组
+                    输出存储器 = ""
+                    首次迭代 = true
+                    for (a = 0; a < 数据源.length; a++) {
+                        if (首次迭代) {
+                            输出存储器 += "'" + 数据源[a] + "'"
+                            首次迭代 = false
+                        } else {
+                            输出存储器 += "-" + "'" + 数据源[a] + "'"
+                        }
+                    }
+                    return 输出存储器
+                }
+            },
+            数据源_修改: {
+                合并: function (行位置, 单片数据源) {
+                    数据源 = sessionStorage.getItem('RandomCall_original_backup').split('\n')
+                    数据源[行位置] = 单片数据源
+                    输出存储器 = ''
+                    for (a = 0; a < 数据源.length; a++) {
+                        输出存储器 += 数据源[a] + '\n'
+                    }
+                    sessionStorage.setItem('RandomCall_original_backup', 输出存储器)
+                },
+                修改_题目: function (位置, 题目) {
+                    单片数据源 = 数据.数据解析.转数组(sessionStorage.getItem('RandomCall_original_backup').split('\n')[位置])
+                    单片数据源[0] = 题目
+                    单片数据源 = 数据.数据解析.转字符串(单片数据源)
+                    数据.数据源_修改.合并(位置, 单片数据源)
+                },
+                修改_答案: function (位置, 答案) {
+                    单片数据源 = 数据.数据解析.转数组(sessionStorage.getItem('RandomCall_original_backup').split('\n')[位置])
+                    单片数据源[单片数据源.length - 1] = 答案
+                    单片数据源 = 数据.数据解析.转字符串(单片数据源)
+                    数据.数据源_修改.合并(位置, 单片数据源)
+
+                },
+                修改_选项: {
+                    增加: function () { },
+                    删除: function () { },
+                    修改: function (行位置, 内容) {
+                        选项位置 = sessionStorage.getItem("RandomCall_Currentclick")
+                        if (!isNull(选项位置)) {
+                            单片数据源 = sessionStorage.getItem('RandomCall_original_backup').split('\n')[行位置]
+                            单片数据源 = 数据.数据解析.转数组(单片数据源)
+                            选项范围 = 单片数据源[1,-2]
+                            // 拼接开始
+                            题目 = 单片数据源[0]
+                            答案 = 单片数据源[-1]
+                            console.log(选项位置)
+                            console.log(内容)
+
+                            选项范围[选项位置] = 内容
+                            选项范围.unshift(题目)
+                            选项范围[选项范围.length] = 答案
+                            // 拼接结束
+                            单片数据源 = 数据.数据解析.转字符串(选项范围)
+                            数据.数据源_修改.合并(行位置,单片数据源)
+
+                        } else {
+                            snackbar('修改失败：未指定对象')
+                        }
+                    }
+                }
+            }
+        }
+
+    </script>
+</body>
+
+</html>
