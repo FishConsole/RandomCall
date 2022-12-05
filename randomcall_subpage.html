@@ -389,7 +389,7 @@
             white-space: nowrap;
         }
 
-        .主页_生成器框架_选项填写框>textarea {
+        .主页_生成器框架_选项填写框>span>textarea {
             background-color: #b1c2ce;
             display: inline-block;
             width: 355px;
@@ -402,7 +402,7 @@
             border: 0;
         }
 
-        .主页_生成器框架_选项填写框>textarea:hover {
+        .主页_生成器框架_选项填写框>span>textarea:hover {
             background-color: #8c98a0ba;
         }
 
@@ -477,7 +477,7 @@
 
 
     function snackbar(内容) {
-            mdui.snackbar({ message: 内容, position: 'top' })
+        mdui.snackbar({ message: 内容, position: 'top' })
     }
 
     function 运行条的提示() {
@@ -543,50 +543,51 @@
         // 如果长期存储中没用内容则不管
 
 
-
-        // console.log(数据.数据源_修改.修改_答案(1, '这是一个被修改的测试答案'))
-        // console.log(数据.数据源_修改.修改_题目(1, '这是一个被修改的测试题目'))
-        console.log()
-
-
-
         var 悬浮执行器 = {
             增加: function (位置信息) {
+                // 读本地数据，拖出来变成数组然后再转textarea再插入，不然值会消失
+
                 snackbar('悬浮执行器接受指令_增加，所指向的位置为' + 位置信息)
                 被增加 = document.getElementById('选项填写框_' + 位置信息)
-                准备编号 = 被增加.children.length + 1
-                内容 = '<textarea class="mdui-ripple" onclick="项目选中器(' + 准备编号 + ')" id="选项填写框_' + 位置信息 + '_' + 准备编号 + '" onchange=数据.数据源_修改.修改_选项.修改('+位置信息+',value)>' + '选项' + 准备编号 + '</textarea>'
-                被增加.innerHTML += 内容
+                准备编号 = 被增加.children.length
+                内容 = '<textarea class="mdui-ripple" onblur="悬浮执行器.清空选项点击记录器();数据.数据源_修改.修改_选项.修改(' + 位置信息 + ',value)" onclick="项目选中器(' + 准备编号 + ')" id="选项填写框_' + 位置信息 + '_' + 准备编号 + '" onblur=数据.数据源_修改.修改_选项.修改(' + 位置信息 + ',value)>' + '选项' + 准备编号 + '</textarea>'
+                节点存储器 = document.createElement('span');
+                节点存储器.innerHTML = 内容
+                被增加.append(节点存储器)
             },
             删除: function (位置信息) {
                 锁定位置 = sessionStorage.getItem("RandomCall_Currentclick")
-                sessionStorage.setItem("RandomCall_Currentclick",null)
+                悬浮执行器.清空选项点击记录器()
                 被删除 = document.getElementById('选项填写框_' + 位置信息 + '_' + 锁定位置)
-                try {
+                // try {
                     被删除.style.cssText = 'background:#a99191'
-                } catch (TypeError) {
-                    对话框('请先选中再删除')
-                    return 0
-                }
+                // } catch (TypeError) {
+                //     对话框('请先选中再删除')
+                //     return 0
+                // }
                 被删除的值 = 被删除.value
                 snackbar('选项：' + 被删除的值 + '已被删除')
                 setTimeout(function () {
                     被删除.remove()
+                    数据.数据源_修改.修改_选项.删除(位置信息)
                 }, 700)
             }, 清空: function (位置信息) {
                 锁定位置 = '主页_生成器范围_序列_' + 位置信息
-                console.log(锁定位置)
                 被删除 = document.getElementById(锁定位置)
                 snackbar('编号：' + 位置信息 + '已被删除')
                 setTimeout(function () {
                     被删除.remove();
                 }, 700)
+            }, 清空选项点击记录器: function () {
+                setTimeout(function () {
+                    sessionStorage.setItem("RandomCall_Currentclick", null)
+                }, 1500)
             }
         }
 
 
         function 项目选中器(位置信息) {
-            snackbar('指定项目被选中，这个位置是' + 位置信息)
+            // snackbar('指定项目被选中，这个位置是' + 位置信息)
             sessionStorage.setItem("RandomCall_Currentclick", 位置信息)
         }
     </script>
@@ -608,6 +609,7 @@
             // 用户离开便清除
             主页生成器范围 = document.getElementById('主页_生成器范围')
             编号 = Number(sessionStorage.getItem("RandomCall_SerialNumber"))
+            全部数据 = sessionStorage.getItem("RandomCall_original_backup")
             if (插入模式) {
                 if (编号 == null) {
                     编号 = 0
@@ -617,22 +619,37 @@
                 temp = '\
         <div id="主页_生成器范围_序列_'+ 编号 + '">\
             <p class="主页_生成器范围_序列">'+ 编号 + '</p>\
-            <div class="主页_生成器框架_题目与答案"><input type="text" value="题目">\
-            <input type="text" value="答案"></div>\
+            <div class="主页_生成器框架_题目与答案">\
+            <input type="text" value="题目" onblur="数据.数据源_修改.修改_题目('+ 编号 + ',value)">\
+            <input type="text" value="答案" onblur="数据.数据源_修改.修改_答案('+ 编号 + ',value)"></div>\
             <div class="主页_生成器框架_选项填写框_浮动操作栏">\
                 <i class="mdui-icon material-icons mdui-ripple" onclick="悬浮执行器.增加('+ 编号 + ')">add</i>\
                 <i class="mdui-icon material-icons mdui-ripple" onclick="悬浮执行器.删除('+ 编号 + ')">clear</i>\
                 <i class="mdui-icon material-icons mdui-ripple" onclick="悬浮执行器.清空('+ 编号 + ')">clear_all</i>\
             </div>\
             <div class="主页_生成器框架_选项填写框" id="选项填写框_'+ 编号 + '">\
-                <textarea class="mdui-ripple" onclick="项目选中器(1)" id="选项填写框_'+ 编号 + '_1" onchange="snackbar(value)">选项1</textarea>\
-                <textarea class="mdui-ripple" onclick="项目选中器(2)" id="选项填写框_'+ 编号 + '_2" onchange="snackbar(value)">选项2</textarea>\
-                <textarea class="mdui-ripple" onclick="项目选中器(3)" id="选项填写框_'+ 编号 + '_3" onchange="snackbar(value)">选项3</textarea>\
+                <span><textarea class="mdui-ripple" onblur="悬浮执行器.清空选项点击记录器();数据.数据源_修改.修改_选项.修改('+ a + ',value)" onclick="项目选中器(0)" id="选项填写框_' + 编号 + '_0">选项1</textarea></span>\
+                <span><textarea class="mdui-ripple" onblur="悬浮执行器.清空选项点击记录器();数据.数据源_修改.修改_选项.修改('+ a + ',value)" onclick="项目选中器(1)" id="选项填写框_' + 编号 + '_1">选项2</textarea></span>\
+                <span><textarea class="mdui-ripple" onblur="悬浮执行器.清空选项点击记录器();数据.数据源_修改.修改_选项.修改('+ a + ',value)" onclick="项目选中器(2)" id="选项填写框_' + 编号 + '_2">选项3</textarea></span>\
             </div>\
         </div>'
                 主页生成器范围.innerHTML += temp
                 编号 = 编号 + 1
                 sessionStorage.setItem("RandomCall_SerialNumber", 编号)
+
+                全部数据 = 全部数据.split('\n')
+                全部数据[全部数据.length] = "'题目'-'选项1'-'选项2'-'选项3'-'答案'"
+                输出存储器 = ''
+                首次运行 = true
+                for (a = 0; a < 全部数据.length; a++) {
+                    if (首次运行) {
+                        输出存储器 += 全部数据[a]
+                        首次运行 = false
+                    } else {
+                        输出存储器 += '\n' + 全部数据[a]
+                    }
+                }
+                sessionStorage.setItem('RandomCall_original_backup',输出存储器)
                 snackbar('操作完成')
                 滚动到页面最底()
                 return 0
@@ -646,13 +663,14 @@
                     选项 = 数据[a].slice(1, -1)
                     选项存储器 = ''
                     for (选项项目 = 0; 选项项目 < 选项.length; 选项项目++) {
-                        选项存储器 += '<textarea class="mdui-ripple" onclick="项目选中器(' + 选项项目 + ')" id="选项填写框_' + a + '_' + 选项项目 +'" onchange=数据.数据源_修改.修改_选项.修改('+a+',value)>' + 选项[选项项目] + '</textarea>'
+                        选项存储器 += '<span><textarea class="mdui-ripple" onblur="悬浮执行器.清空选项点击记录器();数据.数据源_修改.修改_选项.修改(' + a + ',value)" onclick="项目选中器(' + 选项项目 + ')" id="选项填写框_' + a + '_' + 选项项目 + '">' + 选项[选项项目] + '</textarea></span>'
                     }
                     输出存储器 += '\
         <div id="主页_生成器范围_序列_'+ a + '">\
             <p class="主页_生成器范围_序列">'+ a + '</p>\
-            <div class="主页_生成器框架_题目与答案"><input type="text" value="'+ 题目 + '">\
-            <input type="text" value="'+ 答案 + '"></div>\
+            <div class="主页_生成器框架_题目与答案">\
+            <input type="text" value="'+ 题目 + '"  onblur="数据.数据源_修改.修改_题目(' + a + ',value)">\
+            <input type="text" value="'+ 答案 + '"  onblur="数据.数据源_修改.修改_答案(' + a + ',value)"></div>\
             <div class="主页_生成器框架_选项填写框_浮动操作栏">\
                 <i class="mdui-icon material-icons mdui-ripple" onclick="悬浮执行器.增加('+ a + ')">add</i>\
                 <i class="mdui-icon material-icons mdui-ripple" onclick="悬浮执行器.删除('+ a + ')">clear</i>\
@@ -694,26 +712,30 @@
             );
         }
 
-
-
-
-
-
-
-
         function 保存() {
-            snackbar('这是保存器，他现在没用什么卵用')
+            // snackbar('这是保存器，他现在没用什么卵用')
+            数据源 = sessionStorage.getItem('RandomCall_original_backup')
+            a = 数据源.replace(/[__RadomCall_NULL__]*/g, '')
+            a = a.replace(/-''/g, '')
+            localStorage.setItem('RandomCall_original',数据源)
+            snackbar('保存成功')
         }
 
-                数据 = {
+        数据 = {
             数据解析: {
                 转数组: function (数据源) {
+                    console.log(数据源)
                     // '8＋7＝'-'12'-'15'-'1'-'11'-'15'转数组
                     转换后的数据源 = 数据源
-                    a = 转换后的数据源.split("'-'")
-                    a[0] = a[0].slice(1, a.length)
-                    a[a.length - 1] = a[a.length - 1].slice(0, -1)
-                    return a
+                    try {
+                        a = 转换后的数据源.split("'-'")
+                        a[0] = a[0].slice(1)
+                        a[a.length - 1] = a[a.length - 1].replace("'", "")
+                        return a
+                    } catch (e) {
+                        console.log(e)
+                    }
+
                 },
                 转字符串: function (数据源) {
                     // 把字符串按规则转数组
@@ -736,45 +758,90 @@
                     数据源[行位置] = 单片数据源
                     输出存储器 = ''
                     for (a = 0; a < 数据源.length; a++) {
-                        输出存储器 += 数据源[a] + '\n'
+                        if (a != 数据源.length - 1) {
+                            输出存储器 += 数据源[a] + '\n'
+                        } else {
+                            输出存储器 += 数据源[a]
+                        }
                     }
+                    输出存储器.replace("''", "'")
+
                     sessionStorage.setItem('RandomCall_original_backup', 输出存储器)
                 },
-                修改_题目: function (位置, 题目) {
-                    单片数据源 = 数据.数据解析.转数组(sessionStorage.getItem('RandomCall_original_backup').split('\n')[位置])
+                修改_题目: function (行位置, 题目) {
+                    准备转数组的 = sessionStorage.getItem('RandomCall_original_backup')
+                    准备转数组的 = 准备转数组的.split('\n')
+                    准备转数组的 = sessionStorage.getItem('RandomCall_original_backup').split('\n')[行位置]
+                    单片数据源 = 数据.数据解析.转数组(准备转数组的)
+                    console.log(准备转数组的)
                     单片数据源[0] = 题目
                     单片数据源 = 数据.数据解析.转字符串(单片数据源)
-                    数据.数据源_修改.合并(位置, 单片数据源)
+                    数据.数据源_修改.合并(行位置, 单片数据源)
+                    snackbar('题目：【'+题目+'】修改成功')
                 },
-                修改_答案: function (位置, 答案) {
-                    单片数据源 = 数据.数据解析.转数组(sessionStorage.getItem('RandomCall_original_backup').split('\n')[位置])
-                    单片数据源[单片数据源.length - 1] = 答案
+                修改_答案: function (行位置, 答案) {
+                    准备转数组的 = sessionStorage.getItem('RandomCall_original_backup')
+                    准备转数组的 = 准备转数组的.split('\n')
+                    准备转数组的 = sessionStorage.getItem('RandomCall_original_backup').split('\n')[行位置]
+                    单片数据源 = 数据.数据解析.转数组(准备转数组的)
+                    console.log(准备转数组的)
+                    单片数据源[单片数据源.length-1] = 答案
                     单片数据源 = 数据.数据解析.转字符串(单片数据源)
-                    数据.数据源_修改.合并(位置, 单片数据源)
 
+
+
+                    
+                    数据.数据源_修改.合并(行位置, 单片数据源)
+                    snackbar('答案：【'+答案+'】修改成功')
+                    
                 },
                 修改_选项: {
-                    增加: function () { },
-                    删除: function () { },
-                    修改: function (行位置, 内容) {
+                    删除: function (行位置) {
                         选项位置 = sessionStorage.getItem("RandomCall_Currentclick")
+                        // 防止用户点完立刻去点其他地方
+                        sessionStorage.setItem('RandomCall_Currentclick', null)
+
                         if (!isNull(选项位置)) {
                             单片数据源 = sessionStorage.getItem('RandomCall_original_backup').split('\n')[行位置]
                             单片数据源 = 数据.数据解析.转数组(单片数据源)
-                            选项范围 = 单片数据源[1,-2]
-                            // 拼接开始
-                            题目 = 单片数据源[0]
-                            答案 = 单片数据源[-1]
-                            console.log(选项位置)
-                            console.log(内容)
+                            if (单片数据源.length != 2) {
+                                选项范围 = 单片数据源.slice(1, -1)
+                                题目 = 单片数据源[0]
+                                答案 = 单片数据源[单片数据源.length - 1]
+                                // 修改开始
+                                选项范围[选项位置] = '__RadomCall_NULL__'
 
+                                // 拼接结束
+                                选项范围.unshift(题目)
+                                选项范围[选项范围.length] = 答案
+                                单片数据源 = 数据.数据解析.转字符串(选项范围)
+                                数据.数据源_修改.合并(行位置, 单片数据源)
+                                snackbar('修改完成')
+                            } else {
+                                snackbar('修改失败：未指定对象')
+                            }
+                        }
+                    },
+                    修改: function (行位置, 内容) {
+                        选项位置 = sessionStorage.getItem("RandomCall_Currentclick")
+                        if (!isNull(选项位置)) {
+                            单片数据源 = sessionStorage.getItem('RandomCall_original_backup')
+                            单片数据源 = 单片数据源.split('\n')[行位置]
+                            单片数据源 = 数据.数据解析.转数组(单片数据源)
+                            console.log(单片数据源)
+                            选项范围 = 单片数据源.slice(1, -1)
+                            // 修改开始
+                            console.log(选项范围)
+                            题目 = 单片数据源[0]
+                            答案 = 单片数据源[单片数据源.length-1]
                             选项范围[选项位置] = 内容
                             选项范围.unshift(题目)
                             选项范围[选项范围.length] = 答案
                             // 拼接结束
-                            单片数据源 = 数据.数据解析.转字符串(选项范围)
-                            数据.数据源_修改.合并(行位置,单片数据源)
 
+                            单片数据源 = 数据.数据解析.转字符串(选项范围)
+                            数据.数据源_修改.合并(行位置, 单片数据源)
+                            snackbar('修改【' + 内容 + '】完成')
                         } else {
                             snackbar('修改失败：未指定对象')
                         }
@@ -782,7 +849,6 @@
                 }
             }
         }
-
     </script>
 </body>
 
