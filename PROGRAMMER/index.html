@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p id='name'></p>
+<p id='age'></p>
+<script>
+    function 启动ajax(){
+        name=document.getElementById('name')
+        age=document.getElementById('age')
+        let xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                let response = JSON.parse(xhr.responseText);
+                console.log(response['name'])
+                console.log(response['age'])
+            
+            }
+        }
+        xhr.open('GET', 'http://www.fishconsole.asia:9090/test?name=Alice', true);
+        xhr.send();
+    }
+    启动ajax()
+
+    console.log('done')
+</script>
+</body>
+</html>

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?8e5cc3753a077b99931cd49038d6a332";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" />
+    <title>Document</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/css/mdui.min.css"
+          integrity="sha384-cLRrMq39HOZdvE0j6yBojO4+1PrHfB7a9l5qLcmRm/fiWXYY+CndJPmyu5FV/9Tw" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="/PROGRAMMER/css/randomcall.css" id="RandomcallStyle" />
+    <link rel="stylesheet" href="/PROGRAMMER/css/theme/light.css" id="randomcall_theme"/>
+
+    <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js"
+            integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A"
+            crossorigin="anonymous"></script>
+
+    <script>
+        var now = new Date();
+        var hour = now.getHours();
+        var randomcall_theme = document.getElementById('randomcall_theme')
+        if (hour >= 0 && hour < 5) {
+            randomcall_theme.href = '/PROGRAMMER/css/theme/light.css'
+        }
+        if (hour >= 5 && hour < 17) {
+            randomcall_theme.href = '/PROGRAMMER/css/theme/light.css'
+
+        }
+        if (hour >= 17 && hour < 24) {
+            randomcall_theme.href = '/PROGRAMMER/css/theme/light.css'
+        }
+    </script>
+</head>
+<div id="子页面_编辑器容器"></div>
+<div id="子页面_设置页容器"></div>
+
+<script>
+    子页面_编辑器容器 = document.getElementById('子页面_编辑器容器')
+    setTimeout(function () {
+        子页面_编辑器容器.innerHTML = '<iframe src="randomcall_editor" id="子页面_编辑器" style="display:none"></iframe>'
+        // setTimeout(function () {
+        //     子页面_设置页容器.innerHTML = '<iframe src="randomcall_editor.html" frameborder="0" id="子页面_设置页" style="display:none"></iframe>'
+        // }, 2500)
+    }, 2500)
+</script>
+
+
+
+
+
+<body class="mdui-appbar-with-toolbar  mdui-loaded mdui-drawer-body-left" id="body"
+      onclick="try{if(window.screen.availWidth>700){document.documentElement.requestFullscreen()}}catch(TypeError){console.log}"
+      class="light-theme">
+<script>
+    // 程序标识定义
+    function 版本号() {
+        return '20221211.150'
+    }
+
+    function 程序名() {
+        return 'Maybe'
+    }
+
+    function 初始数据源() {
+        return "\
+这是示例数据源：\\n\
+第一个是题目，最后一个是答案，中间是选项，字符串要打小引号\n\
+'第一道题的题目'-'1.1'-'1.2'-'1.2'\\n\
+'第二道题的题目'-'2.1'-'2.2'-'2.2'\\n\
+'第三道题的题目'-'3.1'-'3.2'-'3.2'"
+    }
+</script>
+
+<script>
+    // 工具库
+    function NaN检测(value) {
+        return (typeof value) === 'number' && window.isNaN(value);
+    }
+</script>
+
+<script>
+    // mdui相关
+    var $ = mdui.$;
+    function 对话框(内容) {
+        mdui.alert(内容, '<div><i class="mdui-icon material-icons 对话框图标">all_out</i></div>' + 程序名());
+    }
+
+    function snackbar(内容) {
+        mdui.snackbar({ message: 内容, position: 'top' })
+    }
+
+    function 运行条的提示() {
+        运行条.style.cssText = 'display:block';
+        setTimeout(function () {
+            运行条.style.cssText = 'display:none';
+        }, 2000)
+    }
+
+    function 全屏选文件提示() {
+        if (window.screen.availWidth > 700) {
+            snackbar('电脑模式尚未支持,请手动复制粘贴')
+        }
+    }
+</script>
+
+
+<div class="mdui-progress 运行条" id="运行条">
+    <div class="mdui-progress-indeterminate"></div>
+</div>
+
+<!-- 抽屉栏 -->
+<div class="mdui-drawer" id="drawer">
+    <ul class="mdui-list 抽屉栏_内容">
+
+        <div class="动画">
+            <h1 class="抽屉栏_标题">Maybe</h1>
+
+            <div class="div"></div>
+            <div class="div div_a"></div>
+
+        </div>
+
+        <li class="mdui-list-item mdui-ripple" onclick="进入子页面()">
+            <i class="mdui-list-item-icon mdui-icon material-icons" style="color:rgb(255, 63, 63)">edit</i>
+            <div>编辑数据源</div>
+            <script>
+                function 进入子页面() {
+                    子页面按钮 = document.getElementById('子页面按钮')
+                    子页面 = document.getElementById('子页面_编辑器')
+                    子页面.style.cssText = 'display:block'
+                    setTimeout(function () {
+                        子页面.style.cssText = 'left: 0vw;'
+                        子页面按钮.style.cssText = 'height:60px;width:60px;'
+                        var 抽屉栏_状态 = new mdui.Drawer('#drawer');
+                        抽屉栏_状态.close();
+                    }, 50)
+
+
+                }
+            </script>
+        </li>
+        <li class="mdui-list-item mdui-ripple">
+            <i class="mdui-list-item-icon mdui-icon material-icons" style="color:rgb(92, 189, 139)">settings</i>
+            <div onclick="snackbar('未开启此项功能')">程序设置</div>
+        </li>
+        <li class="mdui-list-item mdui-ripple">
+            <i class="mdui-list-item-icon mdui-icon material-icons" style="color:rgb(53, 114, 255)">history</i>
+            <div onclick="snackbar('未开启此项功能')">更新记录</div>
+        </li>
+        <li class="mdui-list-item mdui-ripple">
+            <i class="mdui-list-item-icon mdui-icon material-icons" style="color:rgb(118, 119, 15)">help_outline</i>
+            <div onclick="snackbar('未开启此项功能')">帮助文档</div>
+        </li>
+        <li class="mdui-list-item mdui-ripple">
+            <i class="mdui-list-item-icon mdui-icon material-icons" style="color:rgb(131, 82, 117)">attach_file</i>
+            <div onclick="snackbar('未开启此项功能')">其他产品</div>
+        </li>
+    </ul>
+</div>
+
+
+<div class="mdui-container">
+    <!-- 顶栏 -->
+    <div class="mdui-toolbar mdui-appbar-fixed 应用栏">
+        <a href="javascript:;" class="mdui-btn mdui-btn-icon" onclick="开启抽屉栏()"><i class="mdui-icon material-icons"
+                                                                                   id="抽屉栏_状态">menu</i></a>
+
+        <script>
+            function 开启抽屉栏() {
+                var 抽屉栏_状态 = new mdui.Drawer('#drawer');
+                抽屉栏_状态.open();
+
+            }
+        </script>
+        <span class="mdui-typo-headline" id="title">Maybe</span>
+        <span href="javascript:;" id='hitokoto_text' class="mdui-typo-title 一言">哈哈哈哈哈哈哈嗝</span>
+        <script>
+            if (window.screen.availWidth > 700) {
+                fetch('https://v1.hitokoto.cn')
+                    .then(response => response.json())
+                    .then(data => {
+                        const hitokoto = document.getElementById('hitokoto_text')
+                        hitokoto.href = 'https://hitokoto.cn/?uuid=' + data.uuid
+                        hitokoto.innerText = data.hitokoto
+                    })
+                    .catch(console.error)
+            }
+        </script>
+        <div class="mdui-toolbar-spacer"></div>
+
+
+
+
+        <ul class="mdui-menu" id="menu">
+            <li class="mdui-menu-item">
+                <a href="javascript:;" class="mdui-ripple" onclick="关于_版本号信息()">关于</a>
+            </li>
+            <script>
+                上一版版本号 = localStorage.getItem("RandomCall_Version")
+                function 关于_版本号信息(上一版版本号 = null) {
+                    if (上一版版本号 != null) {
+                        关于_信息 = '<div class=mdui-divider></div><div class="mdui-typo" style="margin-bottom:20px">这是<a href="https://m.bilibili.com/space/698117971">鱼鱼</a>开发的一个记背辅助器,现在的版本号是<b>' + 上一版版本号 + '</b>，如果没有人来抽背你你又有这种需求，就用我吧</div>'
+                    }
+                    else {
+                        关于_信息 = '<div class=mdui-divider></div><div class="mdui-typo" style="margin-bottom:20px">这是<a href="https://m.bilibili.com/space/698117971">鱼鱼</a>开发的一个记背辅助器，现在的版本是<b>' + 版本号() + '</b>如果没有人来抽背你你又有这种需求，就用我吧</div>'
+                    }
+                    对话框(关于_信息)
+                }
+            </script>
+
+            <li class="mdui-menu-item">
+                <a href="javascript:;" class="mdui-ripple" onclick="程序同步()">程序同步</a>
+            </li>
+
+            <li class="mdui-menu-item">
+                <a href="javascript:;" class="mdui-ripple" onclick="下载配置()">导出配置</a>
+            </li>
+
+            <li class="mdui-menu-item" onclick="全屏选文件提示()">
+                <input type="file" id="文件上传_控件" accept="text/plain" />
+                <a href="javascript:;" class="mdui-ripple">导入配置</a>
+            </li>
+        </ul>
+
+        <script>
+            function 下载配置(text) {
+
+                历史数据 = localStorage.getItem("RandomCall_original");
+                if (历史数据 == null) {
+                    snackbar('配置不存在，导入已停止')
+                    return 0
+                }
+
+                async function copyPageUrl() {
+                    try {
+                        let transfer = document.createElement('textarea');
+                        document.body.appendChild(transfer);
+                        transfer.value = 历史数据  // 这里表示想要复制的内容
+                        transfer.focus();
+                        transfer.select();
+                        if (document.execCommand('copy')) {
+                            document.execCommand('copy');
+                        }
+                        transfer.blur();
+                        document.body.removeChild(transfer);
+
+                        对话框('您的配置已导出到剪贴板中')
+                    } catch (err) {
+                        snackbar('导出配置失败：' + err)
+                        return 0
+                    }
+                }
+
+                copyPageUrl()
+
+            }
+        </script>
+
+        <a href="javascript:;" class="mdui-btn mdui-btn-icon" id="顶栏_多选框_状态"><i
+                class="mdui-icon material-icons">more_vert</i></a>
+        <script>
+            var 顶栏_多选框 = new mdui.Menu('#顶栏_多选框_状态', '#menu');
+            var 抽屉栏_状态 = new mdui.Drawer('#drawer');
+
+            $('#顶栏_多选框_状态').on('click', function () {
+                顶栏_多选框.open();
+            });
+
+            $('#抽屉栏_状态').on('click', function () {
+                抽屉栏_状态.open();
+            });
+        </script>
+        <script>
+
+            var input = document.querySelector('input');
+            var input_info = input.files;
+            var 展示栏 = document.getElementById('展示栏')
+
+
+            input.addEventListener('change', function () {
+                setTimeout(function () {
+                    if (this.files.length) {
+                        let file = this.files[0];
+                        let reader = new FileReader();
+                        var f = document.querySelector("input").files;
+                        上次更新_数据 = typeof f[0].lastModifiedDate;
+                        名称_数据 = f[0].name;
+                        字节_数据 = f[0].size;
+                        var 文件大小 = 字节_数据 / 1024;
+                        if (文件大小 >= 501) {
+                            对话框('文件太大了，只允许上传500KB以内的数据')
+                            return 0
+                        }
+
+                        reader.onload = function () {
+                            展示栏.innerHTML = '<textarea name="" id="数据源录入框" cols="30" rows="10">' + this.result + '</textarea>'// 文件数据流，变成相应格式数据了。（ 文本文件，就输出文本内的文本数据 ）
+                            snackbar('文件：' + 名称_数据 + '导入成功')
+                        };
+                        reader.readAsText(file);
+                    }
+                }, 50)
+            }, false);
+        </script>
+        <script>
+            window.onload = function () {
+                运行条 = document.getElementById('运行条');
+                运行条的提示()
+                更新检测数据源 = localStorage.getItem("RandomCall_reload")
+                更新检测数据源 = JSON.parse(更新检测数据源)
+                更新检测数据源['RandomCall_Main'] = false
+                更新检测数据源 = JSON.stringify(更新检测数据源)
+                localStorage.setItem('RandomCall_reload', 更新检测数据源)
+                if (更新检测数据源) {
+                    console.log('更新器运行')
+                    if (版本号() != localStorage.getItem("RandomCall_Version")) {
+                        snackbar('同步完毕，已更新至 ' + 版本号())
+                        localStorage.setItem("RandomCall_Version", 版本号());
+                    }
+
+                }
+            }
+
+
+
+            function 程序同步() {
+                运行条 = document.getElementById('运行条');
+                document.getElementById('RandomcallStyle').rel = 'stylesheet'
+                document.getElementById('RandomCallTheme').rel = 'stylesheet'
+                运行条.style.cssText = 'display:block';
+
+                准备存的数据 = { 'RandomCall_Main': true, 'randomcall_editor': true }
+                准备存的数据 = JSON.stringify(准备存的数据)
+                localStorage.setItem("RandomCall_reload", 准备存的数据)
+                setTimeout(function () {
+
+                    window.location.reload()
+                }, 2000)
+            }
+
+
+        </script>
+    </div>
+</div>
+<div class="container p-shadow mdui-container">
+    <div id="展示栏">
+        <!-- 这是数据源录入框，点击开始抽背以后存长
+    期数据库然后清除这个并且将这里重写成输入新的内容
+    的textarea框并在里面写入长期存储的数据-->
+        <textarea name="" id="数据源录入框" cols="30" rows="10"></textarea>
+    </div>
+
+    <div class="点火器">
+        <button class="mdui-btn mdui-btn-raised" onclick="点火()">开始抽背</button>
+        <button class="mdui-btn mdui-btn-raised" onclick="重新录入()">更改数据源</button>
+        <div id="题目展示框" class="mdui-typo 题目展示框">
+            <span class="题目">你这个年纪是怎么睡得着觉的？？？？</span>
+        </div>
+    </div>
+
+    <div id="开始抽背" class="开始抽背">
+    </div>
+
+
+
+
+
+
+
+    <script>
+        function 初始数据源() {
+            return "\
+这是示例数据源：\n\
+第一个是题目，最后一个是答案，中间是选项，字符串要打小引号\n\
+'第一道题的题目'-'1.1'-'1.2'-'1.2'\n\
+'第二道题的题目'-'2.1'-'2.2'-'2.2'\n\
+'第三道题的题目'-'3.1'-'3.2'-'3.2'"
+        }
+        function 加载() {
+            展示栏 = document.getElementById('展示栏')
+            计数器 = document.getElementById('计数器')
+            try {
+                计数器.style.cssText = 'padding:0px;height: 0px;background-color: white;'
+            } catch (TypeError) {
+                0
+            }
+            finally {
+                历史数据 = localStorage.getItem("RandomCall_original");
+                if (历史数据 == null) {
+                    历史数据 = 初始数据源()
+                    关于_版本号信息(版本号())
+                }
+                展示栏.innerHTML = '<textarea name="" id="数据源录入框" cols="30" rows="10">' + 历史数据 + '</textarea>'
+                document.getElementById('开始抽背').innerHTML = ""
+                document.getElementById('题目展示框').innerHTML = '<span>你这个年纪是怎么睡得着觉的？？？？</span>'
+            }
+        }
+        加载()
+
+
+
+
+
+        function 抽背() {
+            function 洗牌(arr) {
+                var l = arr.length
+                var index, temp
+                while (l > 0) {
+                    index = Math.floor(Math.random() * l)
+                    temp = arr[l - 1]
+                    arr[l - 1] = arr[index]
+                    arr[index] = temp
+                    l--
+                }
+                return arr
+            }
+            历史数据 = localStorage.getItem("RandomCall_data");
+
+            try {
+                历史数据 = eval('(' + 历史数据 + ')');
+                随机抽取 = 历史数据[Math.floor(Math.random() * 历史数据.length)]
+                运行条的提示()
+                答案 = 随机抽取.slice(-1)
+                选项卡 = 随机抽取.slice(1, -1)
+                选项卡 = 洗牌(选项卡)
+                if (选项卡 == false) {
+                    抽背()
+                    return 0
+                }
+                题目 = 随机抽取[0]
+                输出存储器 = ''
+                for (第一级 = 0; 第一级 < 选项卡.length; 第一级++) {
+                    if (选项卡[第一级] == 答案) {
+                        输出存储器 = 输出存储器 + ' <button onclick=判断(true) class="mdui-btn mdui-btn-raised">' + 选项卡[第一级] + '</button>'
+                    }
+                    else {
+                        输出存储器 = 输出存储器 + ' <button onclick=判断(false) class="mdui-btn mdui-btn-raised">' + 选项卡[第一级] + '</button>'
+                    }
+                }
+
+
+                document.getElementById('开始抽背').innerHTML = 输出存储器
+                document.getElementById('题目展示框').innerHTML = '<span>' + 题目 + '</span>'
+            } catch (SyntaxError) {
+                展示栏 = document.getElementById('展示栏')
+                展示栏.innerHTML = '<textarea name="" id="数据源录入框" cols="30" rows="10">' + 初始数据源() + '</textarea>'
+                localStorage.removeItem('RandomCall_original')
+                localStorage.removeItem('RandomCall_data')
+                对话框('先把初始数据源改正确了再来玩')
+
+                return 0
+            }
+        }
+
+        function 判断(值) {
+            console.log(值)
+            if (值) {
+                计数器统计 = localStorage.getItem("RandomCall_DataCount")
+                计数器 = document.getElementById('计数器')
+
+                if (NaN检测(计数器统计)) {
+                    计数器统计 = 0
+                    console.log('计数器统计重置')
+                }
+                if (计数器统计 == null) {
+                    计数器统计 = 0
+                    localStorage.setItem("RandomCall_DataCount", String(计数器统计));
+                }
+                计数器统计 = parseInt(计数器统计)
+                计数器统计 += 1
+                localStorage.setItem("RandomCall_DataCount", String(计数器统计));
+                计数器.innerHTML = 计数器统计
+                计数器.style.cssText = 'padding:33px;height:10px;background-color: rgb(122, 139, 224);'
+
+                snackbar('对啦！！')
+
+
+                setTimeout(function () {
+                    document.getElementById('题目展示框').innerHTML = '<span>题目切换中..</span>'
+                    document.getElementById('开始抽背').innerHTML = ''
+
+                    if (window.screen.availWidth > 700) {
+                        fetch('https://v1.hitokoto.cn')
+                            .then(response => response.json())
+                            .then(data => {
+                                const hitokoto = document.getElementById('hitokoto_text')
+                                hitokoto.href = 'https://hitokoto.cn/?uuid=' + data.uuid
+                                hitokoto.innerText = data.hitokoto
+                            })
+                            .catch(console.error)
+                    }
+                    抽背()
+                }, 2000)
+            }
+            else {
+                snackbar('错啦！！')
+
+            }
+        }
+
+
+
+        function 点火() {
+
+            数据源录入框 = document.getElementById('数据源录入框')
+            var 数据源 = null
+            输出存储器 = []
+
+            try {
+                数据源 = 数据源录入框.value.split('\n')
+
+
+            } catch (TypeError) {
+                对话框('已经开始了哥，别点我了')
+                return 0
+
+            }
+            首次迭代 = true
+            for (第一级 = 0; 第一级 < 数据源.length; ++第一级) {
+                待存储数据 = 数据源[第一级].split('-')
+                if (首次迭代) {
+                    输出存储器 = '[' + 待存储数据 + ']'
+                    首次迭代 = false
+                }
+                else {
+                    输出存储器 = 输出存储器 + ',[' + 待存储数据 + ']'
+                }
+            }
+            输出存储器 = '[' + 输出存储器 + ']'
+            if (数据源.length == 1) {
+                对话框('填错了兄弟，格式了解一下')
+                return 0
+            }
+            if (展示栏 != null) {
+                展示栏 = document.getElementById('展示栏')
+                // 存储数据
+                localStorage.setItem("RandomCall_original", 数据源录入框.value.toString());
+                localStorage.setItem("RandomCall_data", 输出存储器.toString());
+
+                展示栏.innerHTML = ''
+            }
+            抽背()
+        }
+
+        function 重新录入() {
+            加载()
+        }
+
+
+
+    </script>
+</div>
+
+<div class="计数器 mdui-ripple" id="计数器" onclick='snackbar("如你所见，这是一个计数器，专门来记你通过的次数的")'>1</div>
+<div class="子页面按钮 mdui-ripple" onclick="子页面按钮事件()" id="子页面按钮"><i class="mdui-icon material-icons">arrow_back</i>
+</div>
+<script>
+    function 子页面按钮事件() {
+        子页面按钮 = document.getElementById('子页面按钮')
+        子页面 = document.getElementById('子页面_编辑器')
+        try {
+            overlay = document.querySelector('.mdui-overlay')
+            overlay.click()
+        } finally {
+
+            子页面.style.cssText = 'left: 300vw;'
+            子页面按钮.style.cssText = 'height:0px;width:0px;'
+            setTimeout(function () {
+                子页面.style.cssText = 'display:none'
+                加载()
+                对话框('配置更改已生效')
+            }, 500)
+        }
+    }
+</script>
+</body>
+
+</html>
