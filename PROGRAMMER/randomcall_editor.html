@@ -17,33 +17,30 @@
     <link rel="stylesheet" href="/PROGRAMMER/css/theme/light.css" id="randomcall_theme"/>
 
 </head>
+
 <script>
     var now = new Date();
     var hour = now.getHours();
     var randomcall_theme = document.getElementById('randomcall_theme')
     if (hour >= 0 && hour < 5) {
-        randomcall_theme.href = '/PROGRAMMER/css/theme/light.css'
+        randomcall_theme.href = '/PROGRAMMER/css/theme/dark.css'
     }
     if (hour >= 5 && hour < 17) {
         randomcall_theme.href = '/PROGRAMMER/css/theme/light.css'
 
     }
     if (hour >= 17 && hour < 24) {
-        randomcall_theme.href = '/PROGRAMMER/css/theme/light.css'
+        randomcall_theme.href = '/PROGRAMMER/css/theme/dark.css'
     }
 </script>
 <script>
     window.onload = function () {
         更新检测数据源 = localStorage.getItem("RandomCall_reload")
-        if(isNull(更新检测数据源)){
-            更新检测数据源 = JSON.parse(更新检测数据源)
-            if (更新检测数据源['randomcall_editor']) {
-                更新检测数据源['randomcall_editor'] = false
-                更新检测数据源 = JSON.stringify(更新检测数据源)
-                console.log(更新检测数据源)
-                localStorage.setItem('RandomCall_reload', 更新检测数据源)
-                // window.location.reload()
-            }
+        更新检测数据源 = JSON.parse(更新检测数据源)
+        if(!isNull(更新检测数据源)){
+            更新检测数据源['randomcall_editor'] = false
+            更新检测数据源 = JSON.stringify(更新检测数据源)
+            localStorage.setItem('RandomCall_reload', 更新检测数据源)
         }
     }
 

@@ -32,14 +32,14 @@
         var hour = now.getHours();
         var randomcall_theme = document.getElementById('randomcall_theme')
         if (hour >= 0 && hour < 5) {
-            randomcall_theme.href = '/PROGRAMMER/css/theme/light.css'
+            randomcall_theme.href = '/PROGRAMMER/css/theme/dark.css'
         }
         if (hour >= 5 && hour < 17) {
             randomcall_theme.href = '/PROGRAMMER/css/theme/light.css'
 
         }
         if (hour >= 17 && hour < 24) {
-            randomcall_theme.href = '/PROGRAMMER/css/theme/light.css'
+            randomcall_theme.href = '/PROGRAMMER/css/theme/dark.css'
         }
     </script>
 </head>
@@ -66,7 +66,7 @@
 <script>
     // 程序标识定义
     function 版本号() {
-        return '20221211.150'
+        return '20221215.750'
     }
 
     function 程序名() {
@@ -337,7 +337,6 @@
             function 程序同步() {
                 运行条 = document.getElementById('运行条');
                 document.getElementById('RandomcallStyle').rel = 'stylesheet'
-                document.getElementById('RandomCallTheme').rel = 'stylesheet'
                 运行条.style.cssText = 'display:block';
 
                 准备存的数据 = { 'RandomCall_Main': true, 'randomcall_editor': true }
