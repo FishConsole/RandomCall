@@ -1,5 +1,9 @@
 @import url(/PROGRAMMER/css/theme/Colormixer/tokens.css);
 
+* {
+  color: white
+}
+
 body,
 html {
   background: #171a20;
@@ -34,11 +38,11 @@ textarea {
 }
 
 textarea:active {
-    box-shadow: 2px 2px 20px #6e7199;
+  box-shadow: 2px 2px 20px #6e7199;
 }
 
 textarea:hover {
-    box-shadow: 2px 2px 20px #53567b;
+  box-shadow: 2px 2px 20px #53567b;
 }
 
 .子页面按钮 {
@@ -156,6 +160,8 @@ input {
 
 .mdui-dialog-content {
   color: white;
+  background: #2c3547;
+
 }
 
 @keyframes rotate {
@@ -233,7 +239,10 @@ input {
   color: #fff;
 }
 
-
+.mdui-dialog-actions .mdui-btn {
+  background: #333656;
+  color: #95a6fd !important;
+}
 
 .counter:active {
   box-shadow: 2px 2px 12px #93a1b5;
@@ -299,7 +308,11 @@ input {
   color: var(--md-ref-palette-primary90);
 }
 
-.启动图>h1{
-    text-shadow: 2px 2px 20px #2646685c;
-    color: #ccdbff;
+.启动图>h1 {
+  text-shadow: 2px 2px 20px #2646685c;
+  color: #ccdbff;
+}
+
+.表单_输入框 {
+  color: white;
 }

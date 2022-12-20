@@ -2,7 +2,7 @@
  * @Author: YUIJ 2645602049@qq.com
  * @Date: 2022-12-05 08:51:35
  * @LastEditors: YUIJ 2645602049@qq.com
- * @LastEditTime: 2022-12-15 11:57:09
+ * @LastEditTime: 2022-12-18 13:29:09
  * @FilePath: \RandomCall\main.html
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -22,7 +22,7 @@
     crossorigin="anonymous"></script>
 
   <link rel="stylesheet" href="/PROGRAMMER/css/randomcall.css" id="RandomcallStyle" />
-  <link rel="stylesheet" href="/PROGRAMMER/css/theme/light.css" id="randomcall_theme"/>
+  <link rel="stylesheet" href="/PROGRAMMER/css/theme/light.css" id="randomcall_theme" />
 
 
   <script>
@@ -61,10 +61,7 @@
     .mdui-spinner {
       width: 40px;
       height: 40px;
-      position: absolute;
       border-width: 3px;
-      top: 52%;
-      left: 47%;
     }
 
     h1 {
@@ -74,6 +71,7 @@
       animation-iteration-count: infinite;
       text-shadow: 2px 2px 20px #2646685c;
       font-weight: bold;
+      margin-bottom: 20vh;
     }
 
     .遮罩 {
@@ -87,29 +85,82 @@
       animation-timing-function: cubic-bezier(0.36, 0.31, 0, 1.05);
       animation-fill-mode: forwards;
     }
+
+    .进度条_主页 {
+      height: 39px;
+      width: 48px;
+      display: contents;
+    }
   </style>
 </head>
 
 <body>
-  <iframe src="page/randomcall" id="子页面"></iframe>
+  <script>
+    // 工具
+    function isNull(value) {
+      if (!value && typeof value != "undefined" && value != 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  </script>
+  <script>
+    // mdui相关
+    var $ = mdui.$;
+    function 对话框(内容) {
+      mdui.alert(内容, '<div><i class="mdui-icon material-icons 对话框图标">all_out</i></div>' + 程序名());
+    }
+
+    function snackbar(内容) {
+      mdui.snackbar({ message: 内容, position: 'top' })
+    }
+
+    function 运行条的提示() {
+      运行条.style.cssText = 'display:block';
+      setTimeout(function () {
+        运行条.style.cssText = 'display:none';
+      }, 2000)
+    }
+  </script>
+
+  <iframe src="/randomcall" id="randomcall" style="z-index:2"></iframe>
+  <iframe src="/login" id="login" style="z-index:1"></iframe>
   <div id="启动图" class="启动图">
     <div class="遮罩"></div>
     <h1>Maybe</h1>
-    <div id="进度条">
+    <div id="进度条" class="进度条_主页">
       <div class="mdui-spinner"></div>
     </div>
-
   </div>
 </body>
 <script>
   window.onload = function () {
     进度条 = document.getElementById('进度条')
-    子页面 = document.getElementById('子页面')
+    randomcall = document.getElementById('randomcall')
+    login = document.getElementById('login')
     启动图 = document.getElementById('启动图')
-    子页面.style.cssText = 'left:0'
-    setTimeout(function () {
-      启动图.innerHTML = ''
-    }, 1000)
+
+    window.parent.检查 = function () {
+      判断用户信息是否存在 = localStorage.getItem('RandomCall_UserInfo')
+      if (!isNull(判断用户信息是否存在)) { } else {
+        snackbar('验证失败,因为我根本没想着去验证蛤蛤')
+        randomcall.style.cssText = 'left:0'
+        login.style.cssText = 'left:-30px;z-index:0'
+
+        setTimeout(function () {
+          启动图.innerHTML = ''
+          login.style.cssText = 'display:none'
+        }, 2000)
+      }
+    };
+
+    判断用户信息是否存在 = localStorage.getItem('RandomCall_UserInfo')
+    if (isNull(判断用户信息是否存在)) {
+      login.style.cssText = 'left:0'
+    } else {
+      randomcall.style.cssText = 'left:0'
+    }
   }
 </script>
 
