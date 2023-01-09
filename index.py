@@ -1,14 +1,7 @@
-"""
-Author: YUIJ 2645602049@qq.com
-Date: 2022-12-14 15:19:40
-LastEditors: YUIJ 2645602049@qq.com
-LastEditTime: 2022-12-18 16:50:32
-FilePath: \RandomCall\index.py
-Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
-"""
-from bottle import Bottle, request, static_file, template
-import json
-from CONFIG import config
+from bottle import Bottle, request, static_file, error
+from API import APIhelper
+
+from API.CONFIG import config
 
 main = Bottle()
 
@@ -19,27 +12,27 @@ main = Bottle()
 
 @main.route('/')
 def home():
-    return config.子页位置.page_main()
+    return APIhelper.UA验证(config.子页位置.page_main())
 
 
 @main.route('/randomcall')
 def index():
-    return config.子页位置.randomcall()
+    return APIhelper.UA验证(config.子页位置.randomcall())
 
 
 @main.route('/editor')
 def index():
-    return config.子页位置.randomcall_editor()
+    return APIhelper.UA验证(config.子页位置.randomcall_editor())
 
 
 @main.route('/login')
 def index():
-    return config.子页位置.randomcall_login()
+    return APIhelper.UA验证(config.子页位置.randomcall_login())
 
 
 @main.route('/randomcall_test')
 def index():
-    return config.子页位置.randomcall_login()
+    return APIhelper.UA验证(config.子页位置.randomcall_login())
 
 
 #############################################################################################
@@ -49,12 +42,9 @@ def index():
 
 @main.route('/test')
 def index():
-    name = request.params.items()
-    name = dict(name)
+    return APIhelper.调控中心(request.params.items())
+
     # data = {'name': name, 'age': 11223,'error':'Null','model':'login'}
-    data = json.dumps(name)
-    print(data)
-    return data
 
 
 #############################################################################################
@@ -78,22 +68,33 @@ def server_static(filepath):
 
 @main.route('/js/ajax')
 def index():
-    return config.资源管理器.js.ajax_helper()
+    return APIhelper.UA验证(config.资源管理器.js.ajax_helper())
 
 
 @main.route('/js/dev')
 def index():
-    return config.资源管理器.js.devtool()
+    return APIhelper.UA验证(config.资源管理器.js.devtool())
 
 
 @main.route('/js/encryption')
 def index():
-    return config.资源管理器.js.encryption()
+    return APIhelper.UA验证(config.资源管理器.js.encryption())
 
 
 @main.route('/js/config')
 def index():
-    return config.资源管理器.js.ajax_helper()
+    return APIhelper.UA验证(config.资源管理器.js.config())
 
+
+@main.route('/js/APICallbackControlCenter')
+def index():
+    return APIhelper.UA验证(config.资源管理器.js.config())
+
+@main.error(404)
+def index(error):
+    return APIhelper.关闭页()
+#############################################################################################
+# 启动
+#############################################################################################
 
 main.run(host=config.host(), port=config.port(), reloader=True)

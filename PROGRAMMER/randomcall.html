@@ -323,7 +323,6 @@
                 更新检测数据源 = JSON.stringify(更新检测数据源)
                 localStorage.setItem('RandomCall_reload', 更新检测数据源)
                 if (更新检测数据源) {
-                    console.log('更新器运行')
                     if (版本号() != localStorage.getItem("RandomCall_Version")) {
                         snackbar('同步完毕，已更新至 ' + 版本号())
                         localStorage.setItem("RandomCall_Version", 版本号());

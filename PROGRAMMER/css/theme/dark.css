@@ -314,5 +314,7 @@ input {
 }
 
 .表单_输入框 {
-  color: white;
+    opacity: 1;
+    position: unset;
+    color: #a0a9dd !important;
 }

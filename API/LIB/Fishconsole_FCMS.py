@@ -52,7 +52,10 @@ class Sqlserver:
     # 1. mysql链接地址
     # 2. 用户名
     # 3. 密码
-
+    @staticmethod
+    def 版本号():
+        return 202301060857
+    
     def __init__(self, 链接地址: str, 用户名: str, 密码: str, databases: str = '__fc_wait__', tables: str = '__fc_wait__'):
         # 导入库
         try:
@@ -60,6 +63,13 @@ class Sqlserver:
         except ImportError:
             print('你没有安装pymysql，请安装pymysql后重试')
             exit()
+            
+        try:
+            import cryptography
+        except ImportError:
+            print('你没有安装cryptography，请安装cryptography后重试')
+            exit()
+            
         __类型验证__([[链接地址, 'str'], [用户名, 'str'], [密码, 'str'],
                   [databases, 'str'], [tables, 'str']])
 
@@ -78,10 +88,10 @@ class Sqlserver:
         import pymysql
         # 尝试登录目标数据库
         connect = pymysql.connect(host=self.链接地址,  # 'localhost'
-                                  user=self.用户名,
-                                  password=self.密码,
-                                  charset='utf8')  # 服务器名,账户,密码,数据库名
-
+                                 user=self.用户名,
+                                 password=self.密码,
+                                 database=self.databases,
+                                 charset='utf8')
         if no_databases:
             return connect
         if self.databases == '__fc_wait__' or self.tables == '__fc_wait__':
@@ -225,8 +235,8 @@ class Sqlserver:
 
         ----
 
-        :param 数据: 实例：增加([['事件','14'],['name','Alex']])》对id为17的行插入,事件：14,名字：Alex
-        :param 主键: 实例：增加(['id','17'])》锁定名字为id的主键的第17行
+        :param 数据: 实例：增加([[`事件`,'14'],[`name`,'Alex']])》对id为17的行插入,事件：14,名字：Alex
+        :param 主键: 实例：增加([`id`,'17'])》锁定名字为id的主键的第17行
         :return: 成功返回True,否则返回False
         """
         cur, 更新器 = Sqlserver.配置登录(self)
@@ -260,7 +270,7 @@ class Sqlserver:
             更新器.commit()
             return True
         except Exception as e:
-            raise Exception(f'出现报错 - {e}\n{10 * "-"}\n{sql}')
+            raise Exception(f'出现报错 - {e}\n{10 * "-"}\n{sql}\n'+'''常见错误：不是嵌套字符串，请确保你的字符串是["`字符串`","'字符串'"](区分大小写和反引号)而不是其他类型\n要不然就是你没有设置默认值（1364）\n主键重复(1062)''')
 
     def 删除行(self, 主键: list):
         """
@@ -547,8 +557,8 @@ class Sqlserver:
 
                 ----
 
-                :param 字段名: 这是一个list，他的用处就是使用查看字段的大小。实例：获得字段总列数(['userid','username','password']) -
-                获得userid，username，password的字段总列数
+                :param 字段名: 这是一个list，他的用处就是使用查看字段的大小。实例：获得字段总列数(['userid','username','Password']) -
+                获得userid，username，Password的字段总列数
 
                 :return: 返回的是目标字段的总列数
                 """

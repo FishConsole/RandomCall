@@ -2,9 +2,9 @@
  * @Author: YUIJ 2645602049@qq.com
  * @Date: 2022-12-05 08:51:35
  * @LastEditors: YUIJ 2645602049@qq.com
- * @LastEditTime: 2022-12-18 13:29:09
+ * @LastEditTime: 2023-01-09 12:24:58
  * @FilePath: \RandomCall\main.html
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Description: 这是默认设置,请设置'customMade', 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -20,9 +20,16 @@
   <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js"
     integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A"
     crossorigin="anonymous"></script>
+  <script src="js/APICallbackControlCenter"></script>
 
   <link rel="stylesheet" href="/PROGRAMMER/css/randomcall.css" id="RandomcallStyle" />
   <link rel="stylesheet" href="/PROGRAMMER/css/theme/light.css" id="randomcall_theme" />
+
+  <script src="./js/config"></script>
+  <script src="./js/ajax"></script>
+  <script src="./js/encryption"></script>
+
+
 
 
   <script>
@@ -141,25 +148,38 @@
     login = document.getElementById('login')
     启动图 = document.getElementById('启动图')
 
-    window.parent.检查 = function () {
-      判断用户信息是否存在 = localStorage.getItem('RandomCall_UserInfo')
-      if (!isNull(判断用户信息是否存在)) { } else {
-        snackbar('验证失败,因为我根本没想着去验证蛤蛤')
-        randomcall.style.cssText = 'left:0'
-        login.style.cssText = 'left:-30px;z-index:0'
-
-        setTimeout(function () {
-          启动图.innerHTML = ''
-          login.style.cssText = 'display:none'
-        }, 2000)
-      }
-    };
+    window.parent.重载 = function () {
+      location.reload()
+    }
 
     判断用户信息是否存在 = localStorage.getItem('RandomCall_UserInfo')
     if (isNull(判断用户信息是否存在)) {
       login.style.cssText = 'left:0'
     } else {
-      randomcall.style.cssText = 'left:0'
+      // 判断用户登录状态是否失效
+      用户信息 = localStorage.getItem('RandomCall_UserInfo')
+      console.log(用户信息)
+      用户信息 = 字符串转JSON(用户信息)
+      邮箱 = 用户信息['EmailAddress']
+      密码 = 用户信息['Password']
+
+
+      ajax_helper_main('get', API地址(), ajax_helper_DataHelper(login_forms(密码, 邮箱)), function (result) {
+        result = 字符串转JSON(result)
+        if (result['model'] == 'ok') {
+          randomcall.style.cssText = 'left:0'
+        } else {
+          对话框(result['message'])
+          login.style.cssText = 'left:0'
+        }
+      }, function (b) {
+        // 没联网就会触发这个
+        snackbar('离线模式')
+        randomcall.style.cssText = 'left:0'
+      })
+
+
+
     }
   }
 </script>
