@@ -1,11 +1,3 @@
-'''
-Author: YUIJ 2645602049@qq.com
-Date: 2022-12-21 09:42:12
-LastEditors: YUIJ 2645602049@qq.com
-LastEditTime: 2023-01-08 20:01:04
-FilePath: \RandomCall\API\test.py
-Description: 这是默认设置,请设置'customMade', 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
-'''
 import base64
 import time
 from bottle import request
@@ -29,20 +21,29 @@ def 关闭页():
         <head></head>
         </body>
             <script>
-                window.close()
-                window.history.go(-1);
+
             </script>
         </body>
     </html>
     """
 
 
+"""
+            #     window.close()
+            #     window.history.go(-1);
+            #     alert('老子草你妈狗爬虫')
+"""
+
+
 def UA验证(目标):
     try:
-        数据 = request.headers.get('User-Agent').split(' ')[-2]
-        数据 = 数据.split(r'/')[0]
-        if 数据 != 'Maybe':
-            return 关闭页()
+        if not config.devmodel:
+            数据 = request.headers.get('User-Agent').split(' ')[-2]
+            数据 = 数据.split(r'/')[0]
+            if 数据 != 'Maybe':
+                return 关闭页()
+            else:
+                return 目标
         else:
             return 目标
     except:
@@ -57,7 +58,7 @@ def token验证(token):
         token = base64.b64decode(token)
         token = int(str(int(token))[0:10])
         now = int(time.time())
-        if (now - token < 30):
+        if now - token < 30:
             return True
         else:
             return False
@@ -111,7 +112,6 @@ class API:
             return result
 
     class 用户系统:
-        # CREATE TABLE 'maybe'.'User_info' ('User_Name' VARCHAR(20) NOT NULL COLLATE utf8mb4_0900_ai_ci , 'Password' VARCHAR(20) NOT NULL COLLATE utf8mb4_0900_ai_ci , 'EmailAddress' VARCHAR(20) NOT NULL COLLATE utf8mb4_0900_ai_ci , 'Count_LoginDate' VARCHAR(20) NOT NULL COLLATE utf8mb4_0900_ai_ci , 'Count_Answer' VARCHAR(20) NOT NULL COLLATE utf8mb4_0900_ai_ci , 'LastLogin_IP' VARCHAR(20) NOT NULL COLLATE utf8mb4_0900_ai_ci , 'LastLogin_Date' VARCHAR(20) NOT NULL COLLATE utf8mb4_0900_ai_ci , PRIMARY KEY ('User_Name')) COMMENT='', COLLATE='utf8mb4_0900_ai_ci', ENGINE=InnoDB
         @staticmethod
         def 注册(data):
             邮箱地址 = data['EmailAddress']
@@ -158,12 +158,12 @@ class API:
 def 调控中心(数据源):
     data = dict(数据源)
     # try:
-    if (token验证(data['token'])):
-        if (data['model'] == 'registration'):
+    if token验证(data['token']):
+        if data['model'] == 'registration':
             return API.用户系统.注册(data)
-        if (data['model'] == 'login'):
+        if data['model'] == 'login':
             return API.用户系统.登录(data)
-        elif (data['model'] == 'GetUrl'):
+        elif data['model'] == 'GetUrl':
             return API.杂项.网址()
         else:
             return 回调器.报错回调('21', 'Maybe_Api调控中心》模式选择》未知的模式')

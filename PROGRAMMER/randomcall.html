@@ -15,17 +15,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="screen-orientation" content="portrait">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" />
+
     <title>Document</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/css/mdui.min.css"
-          integrity="sha384-cLRrMq39HOZdvE0j6yBojO4+1PrHfB7a9l5qLcmRm/fiWXYY+CndJPmyu5FV/9Tw" crossorigin="anonymous" />
-
+    <link rel="stylesheet" href="/PROGRAMMER/lib/css/mdui.min.css"/>
     <link rel="stylesheet" href="/PROGRAMMER/css/randomcall.css" id="RandomcallStyle" />
     <link rel="stylesheet" href="/PROGRAMMER/css/theme/light.css" id="randomcall_theme"/>
-
-    <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js"
-            integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A"
-            crossorigin="anonymous"></script>
+    <script src="/PROGRAMMER/lib/js/mdui.min.js"></script>
+    <script src="./js/config"></script>
 
     <script>
         var now = new Date();
@@ -44,16 +41,17 @@
     </script>
 </head>
 <div id="子页面_编辑器容器"></div>
-<div id="子页面_设置页容器"></div>
+<div id="子页面_历史更新容器"></div>
 
 <script>
     子页面_编辑器容器 = document.getElementById('子页面_编辑器容器')
+    子页面_历史更新容器 = document.getElementById('子页面_历史更新容器')
     setTimeout(function () {
         子页面_编辑器容器.innerHTML = '<iframe src="editor" id="子页面_编辑器" style="display:none"></iframe>'
-        // setTimeout(function () {
-        //     子页面_设置页容器.innerHTML = '<iframe src="randomcall_editor.html" frameborder="0" id="子页面_设置页" style="display:none"></iframe>'
-        // }, 2500)
-    }, 2500)
+        setTimeout(function () {
+            子页面_历史更新容器.innerHTML = '<iframe src="ChangeLog" id="子页面_ChangeLog" style="display:none"></iframe>'
+        }, 1500)
+    }, 1500)
 </script>
 
 
@@ -62,26 +60,13 @@
 
 <body class="mdui-appbar-with-toolbar  mdui-loaded mdui-drawer-body-left" id="body"
       onclick="try{if(window.screen.availWidth>700){document.documentElement.requestFullscreen()}}catch(TypeError){console.log}"
-      class="light-theme">
-<script>
-    // 程序标识定义
-    function 版本号() {
-        return '20221217.150'
-    }
+      class="light-theme" id="body">
 
-    function 程序名() {
-        return 'Maybe'
-    }
+<!--让body的高度比所有的元素都高，然后用css让主体下移，这样用户就可以往上滑动-->
+<!--然后设置一个循环操作判断是否到预设位置，到了预设位置就用js强制归位，这样就-->
+<!--做到了仿安卓的回弹效果-->
 
-    function 初始数据源() {
-        return "\
-这是示例数据源：\\n\
-第一个是题目，最后一个是答案，中间是选项，字符串要打小引号\n\
-'第一道题的题目'-'1.1'-'1.2'-'1.2'\\n\
-'第二道题的题目'-'2.1'-'2.2'-'2.2'\\n\
-'第三道题的题目'-'3.1'-'3.2'-'3.2'"
-    }
-</script>
+
 
 <script>
     // 工具库
@@ -122,32 +107,25 @@
 
 <!-- 抽屉栏 -->
 <div class="mdui-drawer" id="drawer">
+    <div class="动画">
+        <h1 class="抽屉栏_标题">Maybe</h1>
+        <div class="div"></div>
+        <div class="div div_a"></div>
+    </div>
+
     <ul class="mdui-list 抽屉栏_内容">
-
-        <div class="动画">
-            <h1 class="抽屉栏_标题">Maybe</h1>
-
-            <div class="div"></div>
-            <div class="div div_a"></div>
-
-        </div>
-
-        <li class="mdui-list-item mdui-ripple" onclick="进入子页面()">
+        <li class="mdui-list-item mdui-ripple" onclick="进入编辑器()">
             <i class="mdui-list-item-icon mdui-icon material-icons" style="color:rgb(255, 63, 63)">edit</i>
             <div>编辑数据源</div>
             <script>
-                function 进入子页面() {
-                    子页面按钮 = document.getElementById('子页面按钮')
-                    子页面 = document.getElementById('子页面_编辑器')
-                    子页面.style.cssText = 'display:block'
+                function 进入编辑器() {
+                    子页面_编辑器 = document.getElementById('子页面_编辑器')
+                    子页面_编辑器.style.cssText = 'display:block'
                     setTimeout(function () {
-                        子页面.style.cssText = 'left: 0vw;'
-                        子页面按钮.style.cssText = 'height:60px;width:60px;'
+                        子页面_编辑器.style.cssText = 'left: 0vw;'
                         var 抽屉栏_状态 = new mdui.Drawer('#drawer');
                         抽屉栏_状态.close();
                     }, 50)
-
-
                 }
             </script>
         </li>
@@ -155,9 +133,20 @@
             <i class="mdui-list-item-icon mdui-icon material-icons" style="color:rgb(92, 189, 139)">settings</i>
             <div onclick="snackbar('未开启此项功能')">程序设置</div>
         </li>
-        <li class="mdui-list-item mdui-ripple">
+        <li class="mdui-list-item mdui-ripple"  onclick="进入更新记录()">
             <i class="mdui-list-item-icon mdui-icon material-icons" style="color:rgb(53, 114, 255)">history</i>
-            <div onclick="snackbar('未开启此项功能')">更新记录</div>
+            <div>更新记录</div>
+            <script>
+                function 进入更新记录() {
+                    子页面_ChangeLog = document.getElementById('子页面_ChangeLog')
+                    子页面_ChangeLog.style.cssText = 'display:block'
+                    setTimeout(function () {
+                        子页面_ChangeLog.style.cssText = 'left: 0vw;'
+                        var 抽屉栏_状态 = new mdui.Drawer('#drawer');
+                        抽屉栏_状态.close();
+                    }, 50)
+                }
+            </script>
         </li>
         <li class="mdui-list-item mdui-ripple">
             <i class="mdui-list-item-icon mdui-icon material-icons" style="color:rgb(118, 119, 15)">help_outline</i>
@@ -256,7 +245,7 @@
                         transfer.blur();
                         document.body.removeChild(transfer);
 
-                        对话框('您的配置已导出到剪贴板中')
+                        snackbar('您的配置已导出到剪贴板中')
                     } catch (err) {
                         snackbar('导出配置失败：' + err)
                         return 0
@@ -320,16 +309,15 @@
                 更新检测数据源 = localStorage.getItem("RandomCall_reload")
                 更新检测数据源 = JSON.parse(更新检测数据源)
                 更新检测数据源['RandomCall_Main'] = false
-                更新检测数据源 = JSON.stringify(更新检测数据源)
-                localStorage.setItem('RandomCall_reload', 更新检测数据源)
-                if (更新检测数据源) {
-                    if (版本号() != localStorage.getItem("RandomCall_Version")) {
-                        snackbar('同步完毕，已更新至 ' + 版本号())
-                        localStorage.setItem("RandomCall_Version", 版本号());
+                    更新检测数据源 = JSON.stringify(更新检测数据源)
+                    localStorage.setItem('RandomCall_reload', 更新检测数据源)
+                    if (更新检测数据源) {
+                        if (版本号() != localStorage.getItem("RandomCall_Version")) {
+                            snackbar('同步完毕，已更新至 ' + 版本号())
+                            localStorage.setItem("RandomCall_Version", 版本号());
+                        }
                     }
-
                 }
-            }
 
 
 
@@ -351,7 +339,22 @@
         </script>
     </div>
 </div>
-<div class="container p-shadow mdui-container">
+<div class="container p-shadow mdui-container" id="上滑偏移">
+    <script>
+        const body = document.getElementById('body');
+        const 上滑偏移 = document.getElementById('上滑偏移')
+        document.addEventListener("wheel",function () {
+            if (event.deltaY === 0) {
+                if (body.getBoundingClientRect().top === 0) {
+                    console.log("滚动")
+                    上滑偏移.style.cssText = "margin-top:30px"
+                    setTimeout(function (){
+                        上滑偏移.style.cssText = "margin-top:0px"
+                    },80)
+                }
+            }
+        })
+    </script>
     <div id="展示栏">
         <!-- 这是数据源录入框，点击开始抽背以后存长
     期数据库然后清除这个并且将这里重写成输入新的内容
@@ -379,8 +382,12 @@
     <script>
         function 初始数据源() {
             return "\
+------------------------------------------------\n\
 这是示例数据源：\n\
 第一个是题目，最后一个是答案，中间是选项，字符串要打小引号\n\
+看懂了嘛？看懂了把上面的删掉（无奈），现在的傻子太多了这都看不懂\n\
+---------下面是一个例子，删掉上面后运行---------\n\
+\n\
 '第一道题的题目'-'1.1'-'1.2'-'1.2'\n\
 '第二道题的题目'-'2.1'-'2.2'-'2.2'\n\
 '第三道题的题目'-'3.1'-'3.2'-'3.2'"
@@ -451,6 +458,7 @@
                 document.getElementById('开始抽背').innerHTML = 输出存储器
                 document.getElementById('题目展示框').innerHTML = '<span>' + 题目 + '</span>'
             } catch (SyntaxError) {
+                下载配置()
                 展示栏 = document.getElementById('展示栏')
                 展示栏.innerHTML = '<textarea name="" id="数据源录入框" cols="30" rows="10">' + 初始数据源() + '</textarea>'
                 localStorage.removeItem('RandomCall_original')
@@ -561,26 +569,38 @@
 </div>
 
 <div class="计数器 mdui-ripple" id="计数器" onclick='snackbar("如你所见，这是一个计数器，专门来记你通过的次数的")'>1</div>
-<div class="子页面按钮 mdui-ripple" onclick="子页面按钮事件()" id="子页面按钮"><i class="mdui-icon material-icons">arrow_back</i>
 </div>
 <script>
-    function 子页面按钮事件() {
-        子页面按钮 = document.getElementById('子页面按钮')
-        子页面 = document.getElementById('子页面_编辑器')
-        try {
-            overlay = document.querySelector('.mdui-overlay')
-            overlay.click()
-        } finally {
-
-            子页面.style.cssText = 'left: 300vw;'
-            子页面按钮.style.cssText = 'height:0px;width:0px;'
-            setTimeout(function () {
-                子页面.style.cssText = 'display:none'
+    parent.parent.返回 = function (data){
+        if (data == 'editor') {
+            子页面_编辑器 = document.getElementById('子页面_编辑器')
+            子页面_编辑器.style.cssText = 'left:300vw'
+            try {
+                let child = document.querySelector('.mdui-overlay')
+                let parent = document.getElementById('body')
+                parent.removeChild(child)
+            } finally {
                 加载()
                 对话框('配置更改已生效')
-            }, 500)
+            }
+            setTimeout(function () {
+                子页面_编辑器.style.cssText = 'display:none'
+            }, 3000)
         }
+        if(data=='ChangeLog'){
+            子页面_ChangeLog=document.getElementById('子页面_ChangeLog')
+            子页面_ChangeLog.style.cssText='left:300vw'
+            let child = document.querySelector('.mdui-overlay')
+            let parent = document.getElementById('body')
+            parent.removeChild(child)
+            setTimeout(function (){
+                子页面_ChangeLog.style.cssText='display:none'
+            },3000)
+
+        }
+        console.log(data)
     }
+
 </script>
 </body>
 

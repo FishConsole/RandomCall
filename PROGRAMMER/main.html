@@ -2,7 +2,7 @@
  * @Author: YUIJ 2645602049@qq.com
  * @Date: 2022-12-05 08:51:35
  * @LastEditors: YUIJ 2645602049@qq.com
- * @LastEditTime: 2023-01-09 12:24:58
+ * @LastEditTime: 2023-01-10 18:54:45
  * @FilePath: \RandomCall\main.html
  * @Description: 这是默认设置,请设置'customMade', 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -15,15 +15,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" />
   <title>Document</title>
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/css/mdui.min.css"
-    integrity="sha384-cLRrMq39HOZdvE0j6yBojO4+1PrHfB7a9l5qLcmRm/fiWXYY+CndJPmyu5FV/9Tw" crossorigin="anonymous" />
-  <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js"
-    integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A"
-    crossorigin="anonymous"></script>
-  <script src="js/APICallbackControlCenter"></script>
-
+  <link rel="stylesheet" href="/PROGRAMMER/lib/css/mdui.min.css"/>
   <link rel="stylesheet" href="/PROGRAMMER/css/randomcall.css" id="RandomcallStyle" />
-  <link rel="stylesheet" href="/PROGRAMMER/css/theme/light.css" id="randomcall_theme" />
+  <link rel="stylesheet" href="/PROGRAMMER/css/theme/light.css" id="randomcall_theme"/>
+  <script src="/PROGRAMMER/lib/js/mdui.min.js"></script>
 
   <script src="./js/config"></script>
   <script src="./js/ajax"></script>
@@ -52,11 +47,11 @@
 
       /*设置内容由显示变为隐藏*/
       0% {
-        opacity: 1;
+        opacity: 0;
       }
 
       100% {
-        opacity: 0;
+        opacity: 1;
       }
     }
 
@@ -81,16 +76,13 @@
       margin-bottom: 20vh;
     }
 
-    .遮罩 {
-      width: 100%;
-      height: 100vh;
-      background: white;
-      position: fixed;
-      z-index: 1;
-      animation-name: 渐变入场;
-      animation-duration: 1s;
-      animation-timing-function: cubic-bezier(0.36, 0.31, 0, 1.05);
+    body {
+      opacity: 0;
       animation-fill-mode: forwards;
+      animation-name: 渐变入场;
+      animation-duration: 1.5s;
+      animation-delay: 0.4s;
+      animation-timing-function: cubic-bezier(0.36, 0.31, 0, 1.05);
     }
 
     .进度条_主页 {
@@ -98,51 +90,62 @@
       width: 48px;
       display: contents;
     }
+
+    .temp{
+      position: fixed;
+      left: 0;
+      top: 10vw;
+      width: 100%;
+      height: 100%;
+      z-index: 5001;
+      border: medium none;
+      opacity: 0;
+    }
   </style>
 </head>
 
-<body>
-  <script>
-    // 工具
-    function isNull(value) {
-      if (!value && typeof value != "undefined" && value != 0) {
-        return true;
-      } else {
-        return false;
-      }
+<body id="body">
+<script>
+  // 工具
+  function isNull(value) {
+    if (!value && typeof value != "undefined" && value != 0) {
+      return true;
+    } else {
+      return false;
     }
-  </script>
-  <script>
-    // mdui相关
-    var $ = mdui.$;
-    function 对话框(内容) {
-      mdui.alert(内容, '<div><i class="mdui-icon material-icons 对话框图标">all_out</i></div>' + 程序名());
-    }
+  }
+</script>
+<script>
+  // mdui相关
+  var $ = mdui.$;
+  function 对话框(内容) {
+    mdui.alert(内容, '<div><i class="mdui-icon material-icons 对话框图标">all_out</i></div>' + 程序名());
+  }
 
-    function snackbar(内容) {
-      mdui.snackbar({ message: 内容, position: 'top' })
-    }
+  function snackbar(内容) {
+    mdui.snackbar({ message: 内容, position: 'top' })
+  }
 
-    function 运行条的提示() {
-      运行条.style.cssText = 'display:block';
-      setTimeout(function () {
-        运行条.style.cssText = 'display:none';
-      }, 2000)
-    }
-  </script>
+  function 运行条的提示() {
+    运行条.style.cssText = 'display:block';
+    setTimeout(function () {
+      运行条.style.cssText = 'display:none';
+    }, 2000)
+  }
+</script>
 
-  <iframe src="/randomcall" id="randomcall" style="z-index:2"></iframe>
-  <iframe src="/login" id="login" style="z-index:1"></iframe>
-  <div id="启动图" class="启动图">
-    <div class="遮罩"></div>
-    <h1>Maybe</h1>
-    <div id="进度条" class="进度条_主页">
-      <div class="mdui-spinner"></div>
-    </div>
+<iframe src="/randomcall" id="randomcall" style="z-index:2" class="temp"></iframe>
+<iframe src="/login" id="login" style="z-index:1"></iframe>
+<div id="启动图" class="启动图">
+  <h1>Maybe</h1>
+  <div id="进度条" class="进度条_主页">
+    <div class="mdui-spinner"></div>
   </div>
+</div>
 </body>
 <script>
   window.onload = function () {
+
     进度条 = document.getElementById('进度条')
     randomcall = document.getElementById('randomcall')
     login = document.getElementById('login')
@@ -158,7 +161,6 @@
     } else {
       // 判断用户登录状态是否失效
       用户信息 = localStorage.getItem('RandomCall_UserInfo')
-      console.log(用户信息)
       用户信息 = 字符串转JSON(用户信息)
       邮箱 = 用户信息['EmailAddress']
       密码 = 用户信息['Password']
@@ -167,16 +169,22 @@
       ajax_helper_main('get', API地址(), ajax_helper_DataHelper(login_forms(密码, 邮箱)), function (result) {
         result = 字符串转JSON(result)
         if (result['model'] == 'ok') {
-          randomcall.style.cssText = 'left:0'
+          setTimeout(function(){
+            randomcall.style.cssText = 'top:0;opacity:1;'
+          },1200)
         } else {
           对话框(result['message'])
+          console.log('进入登录页')
           login.style.cssText = 'left:0'
         }
       }, function (b) {
         // 没联网就会触发这个
-        snackbar('离线模式')
-        randomcall.style.cssText = 'left:0'
+        setTimeout(function(){
+          randomcall.style.cssText = 'top:0;opacity:1;'
+        },1200)
       })
+
+
 
 
 

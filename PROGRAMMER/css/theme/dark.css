@@ -159,9 +159,12 @@ input {
 }
 
 .mdui-dialog-content {
-  color: white;
+  color: #e5ecffe0;
   background: #2c3547;
+}
 
+.mdui-dialog-actions{
+  background: #2c3547;
 }
 
 @keyframes rotate {
@@ -285,7 +288,7 @@ input {
 }
 
 .home_GeneratorFramework_OptionFillingBox_浮动操作栏 {
-  background-color: var(--md-ref-palette-primary80);
+  background-color: #7688b68a;
 }
 
 .home_GeneratorFramework_OptionFillingBox_浮动操作栏>i:hover {
@@ -293,7 +296,7 @@ input {
 }
 
 .mdui-typo {
-  color: white;
+  color: #e5ecffe0;
 }
 
 .mdui-typo-title {
@@ -307,6 +310,8 @@ input {
 .抽屉栏_内容>li>div {
   color: var(--md-ref-palette-primary90);
 }
+
+
 
 .启动图>h1 {
   text-shadow: 2px 2px 20px #2646685c;

@@ -6,6 +6,11 @@
     padding: 0;
 }
 
+body::-webkit-scrollbar {
+    /*隐藏进度条*/
+    background-color: rgba(255, 0, 0, 0);
+}
+
 textarea {
     letter-spacing: 1px;
     overflow: scroll;
@@ -22,13 +27,16 @@ textarea {
 
 iframe {
     position: fixed;
-    left: 300vw;
+    left: 100vw;
     top: 0;
     width: 100%;
     height: 100%;
     z-index: 5001;
     border: medium none;
+    will-change: left;
 }
+
+
 
 .子页面按钮 {
     z-index: 5002;
@@ -83,7 +91,7 @@ iframe {
     z-index: 1;
     position: absolute;
     left: 43px;
-    top: 70px;
+    top: 50px;
 }
 
 .抽屉栏_标题_分割线 {
@@ -142,6 +150,25 @@ input {
     font-size: 13px !important;
     position: relative;
     left: 20px;
+}
+
+
+.mdui-typo,
+.mdui-dialog-content {
+    line-height: 1.8;
+    word-wrap: break-word;
+    font-size: 14px !important;
+    letter-spacing: 1.7px;
+    font-weight: 400;
+}
+
+.mdui-dialog-alert {
+    max-width: 348px !important;
+}
+
+.mdui-dialog {
+    -webkit-box-shadow: 0 1px 15px -7px rgb(0 0 0 / 0%), 0 24px 38px 3px rgb(0 0 0 / 0%), 0 0px 38px 0px rgb(0 0 0 / 12%);
+    box-shadow: 0 1px 15px -7px rgb(0 0 0 / 0%), 0 24px 38px 3px rgb(0 0 0 / 0%), 0 0px 38px 0px rgb(0 0 0 / 12%);
 }
 
 .mdui-dialog,
@@ -223,13 +250,18 @@ input {
 
 }
 
+.抽屉栏_内容 {
+    width: 89%;
+    margin-left: 24px;
+    height: 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
 .抽屉栏_内容>li {
-    width: 86%;
     border-radius: 25px;
-    position: relative;
-    top: 15px;
-    left: 25px;
-    margin-top: 7px;
+
 }
 
 .计数器 {
@@ -247,11 +279,11 @@ input {
     border-radius: 20px;
     left: -17px;
     max-width: 294px;
+    box-shadow: none !important;
 }
 
 body.mdui-loaded .mdui-drawer {
-    transition: all .45s cubic-bezier(0.68, 0.33, 0.02, 1.08);
-    transition-delay: 0.05s;
+    will-change: transition;
 }
 
 
@@ -367,7 +399,7 @@ body.mdui-loaded .mdui-drawer {
 }
 
 .mdui-dialog-alert {
-    border-radius: 20px;
+    border-radius: 40px;
 }
 
 .mdui-snackbar {
@@ -460,12 +492,9 @@ body.mdui-loaded .mdui-drawer {
 }
 
 .home_Card {
-    width: 90%;
-    position: relative;
     top: 82px;
     height: 22vh;
-    left: 2%;
-    padding: 20px 0px 30px 20px;
+    padding: 20px 0 30px 20px;
     border-radius: 20px;
 }
 
@@ -482,18 +511,17 @@ body.mdui-loaded .mdui-drawer {
 
 .home_GeneratorScope {
     position: relative;
-    top: 86px;
+    top: 116px;
     left: 5px;
 }
 
 .home_GeneratorScope_Sequence {
-    width: 20px;
     padding: 11px;
-    border-radius: 50%;
     font-weight: bold;
     font-size: 20px;
-    margin-top: 12px;
-    margin-left: -19px;
+    position: relative;
+    top: -13px;
+    left: -16px;
 }
 
 .home_GeneratorFramework_QuestionsAndAnswers {
@@ -553,8 +581,7 @@ body.mdui-loaded .mdui-drawer {
 
 .home_GeneratorFramework_OptionFillingBox_浮动操作栏 {
     position: relative;
-    top: -8px;
-    left: 64vw;
+    left: 62vw;
     border-radius: 15px;
     z-index: 2;
     padding: 4px;
@@ -571,6 +598,36 @@ body.mdui-loaded .mdui-drawer {
     border-radius: 13px;
     line-height: 1.2;
 }
+@media (min-width: 390px) {
+    .home_GeneratorFramework_OptionFillingBox_浮动操作栏 {
+        top: -11px;
+    }
+}
+
+@media (min-width: 600px) {
+    .home_GeneratorFramework_OptionFillingBox_浮动操作栏 {
+        top: -11px;
+    }
+}
+
+@media (min-width: 840px) {
+    .home_GeneratorFramework_OptionFillingBox_浮动操作栏 {
+        top: 20px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .home_GeneratorFramework_OptionFillingBox_浮动操作栏 {
+        top: 6px;
+    }
+}
+
+
+
+
+
+
+
 
 .mdui-dialog-confirm {
     border-radius: 20px;

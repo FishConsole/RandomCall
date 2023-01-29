@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport"/>
+    <title>Document</title>
+
+    <link href="/PROGRAMMER/lib/css/mdui.min.css" rel="stylesheet"/>
+    <link href="/PROGRAMMER/css/randomcall.css" id="RandomcallStyle" rel="stylesheet"/>
+    <link href="/PROGRAMMER/css/theme/light.css" id="randomcall_theme" rel="stylesheet"/>
+    <script src="/PROGRAMMER/lib/js/mdui.min.js"></script>
+    <style>
+        .项目范围 {
+            /*background: pink;*/
+            height: 800px;
+            width: 90%;
+            max-width: 900px;
+            margin: 59px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .板块 {
+            /*background: hotpink;*/
+            width: 100%;
+            padding-bottom: 30px;
+            border-bottom: solid 0.5px #5e87be52;
+        }
+
+        .标题 {
+            height: 47px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .版本号 {
+            /*background: indianred;*/
+            height: 47px;
+            width: 67px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .版本号值 {
+            /*background: blueviolet;*/
+            height: 47px;
+            width: 67px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .内容 {
+            /*background: #00b8d4;*/
+            width: 100%;
+            position: relative;
+            top: 3px;
+        }
+
+        li {
+            position: relative;
+            font-size: revert;
+            left: 23px;
+            width: 90%;
+            font-weight: 430;
+            color: #6d7489;
+            word-break: break-word;
+            line-height: 23px;
+        }
+
+    </style>
+</head>
+<script>
+    var now = new Date();
+    var hour = now.getHours();
+    var randomcall_theme = document.getElementById('randomcall_theme')
+    if (hour >= 0 && hour < 5) {
+        randomcall_theme.href = '/PROGRAMMER/css/theme/dark.css'
+    }
+    if (hour >= 5 && hour < 17) {
+        randomcall_theme.href = '/PROGRAMMER/css/theme/light.css'
+
+    }
+    if (hour >= 17 && hour < 24) {
+        randomcall_theme.href = '/PROGRAMMER/css/theme/dark.css'
+    }
+</script>
+
+<body id="body">
+<!-- 顶栏 -->
+<div class="mdui-toolbar mdui-appbar-fixed applicationBar 应用栏">
+    <button class="drawer mdui-btn mdui-btn-icon mdui-ripple" onclick="parent.parent.返回('ChangeLog')"><i
+            class="mdui-icon material-icons">arrow_back</i></button>
+    <a class="mdui-typo-headline" href="javascript:;" onclick="滚动到页面最顶()">更新记录</a>
+</div>
+
+<div class="项目范围" id="上滑偏移"></div>
+<script>
+    数据源 = [
+        {'版本号':'123456',
+            '更新内容':[
+                '123123123',
+                '123123123'
+            ]
+        },
+    ]
+
+
+    输入 = document.getElementById('上滑偏移')
+    for(a=0;a<数据源.length;a++){
+        临时存储器 ='<div class="板块">' +
+            '            <div class="标题">' +
+            '                <div class="版本号">版本号</div>' +
+            '                <div class="版本号值">'+数据源[a]["版本号"]+'</div>' +
+            '            </div>' +
+            '            <div class="内容">' +
+            '                <div class="文字">' +
+            '                    <ul class="mdui-typo">'
+
+        临时存储器a =  ''
+        for(b=0;b<数据源[a]["更新内容"].length;b++){
+            临时存储器a += "<li>"+数据源[a]["更新内容"][b]+"</li>"
+        }
+        临时存储器 += 临时存储器a+ '</ul></div>'
+        输入.innerHTML += 临时存储器
+        临时存储器 = null
+    }
+
+    const body = document.getElementById('body');
+    const 上滑偏移 = document.getElementById('上滑偏移')
+    document.addEventListener("wheel", function () {
+        if (event.deltaY === 0) {
+            console.log(body.getBoundingClientRect().top)
+            if (body.getBoundingClientRect().top === 58.997745513916016) {
+                上滑偏移.style.cssText = "margin-top:9px"
+                setTimeout(function () {
+                    上滑偏移.style.cssText = "margin-top:59px"
+                }, 80)
+            }
+        }
+    })
+</script>
+
+</body>
+</html>
