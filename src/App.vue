@@ -5,7 +5,6 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: #111e17;
   padding: 20px;
 }
 
@@ -35,12 +34,18 @@
   background: #91c5a7;
 }
 
-.范围 > div, .范围 > div > div {
-  display: flex;
+.范围 > div,.答题界面{
+  display: flex!important;
   flex-direction: column;
   align-items: center;
 }
 
+.范围 > div > div{
+  display: grid;
+  margin-top: 20px;
+  flex-direction: column;
+  align-items: center;
+}
 
 .首页按钮 {
   display: grid;
@@ -50,20 +55,18 @@
   justify-items: center;
 }
 
-textarea {
-  resize: vertical;
-  height: 5vh;
-  width: 100%;
+mdui-button{
   margin-top: 10px;
-  background: #202020;
-  color: white;
-  outline: none;
 }
 
-h1 {
-  color: white;
+h1{
+  margin-bottom: 20px;
 }
 
+mdui-linear-progress{
+  position: fixed;
+  top: 0;
+}
 @media (max-width: 768px) {
   .首页按钮 {
     grid-template-columns: 1fr;
@@ -79,9 +82,6 @@ h1 {
 </style>
 
 <style>
-p {
-  color: white;
-}
 
 button > p {
   color: black;
@@ -94,34 +94,37 @@ button > p {
 </style>
 
 <template>
-  <div class="范围">
+  <div class="范围 mdui-theme-dark">
+    <mdui-linear-progress :value="已完成数量/数据源总量"></mdui-linear-progress>
     <!-- 数据输入区域 -->
     <div v-if="!学习模式">
       <h1>Maybe</h1>
-      <textarea v-model="新题目" placeholder="输入题目（支持Markdown）"/>
-      <textarea v-model="新答案" placeholder="输入答案（支持Markdown）"/>
+      <mdui-card>
+        <mdui-text-field v-model="新题目" label="输入题目（支持Markdown）"/>
+        <mdui-text-field v-model="新答案" label="输入答案（支持Markdown）"/>
+      </mdui-card>
       <div class="首页按钮">
-        <button @click="开始学习">开始学习</button>
-        <button @click="添加数据源">添加</button>
-        <button @click="导出到剪贴板">导出到剪贴板</button>
-        <button @click="从剪贴板导入">导入数据源</button>
-        <button @click="清空数据源">清空数据源</button>
+        <mdui-button @click="开始学习">开始学习</mdui-button>
+        <mdui-button @click="添加数据源">添加</mdui-button>
+        <mdui-button @click="导出到剪贴板">导出到剪贴板</mdui-button>
+        <mdui-button @click="从剪贴板导入">导入数据源</mdui-button>
+        <mdui-button @click="清空数据源">清空数据源</mdui-button>
       </div>
     </div>
 
     <!-- 学习模式 -->
     <div v-else>
-      <div v-if="当前题目">
+      <div v-if="当前题目" class="答题界面">
         <!-- 渲染Markdown题目 -->
         <div v-html="renderMarkdown(当前题目.题目)"></div>
 
         <!-- 选项按钮 -->
-        <button
+        <mdui-button
           v-for="(选项, 索引) in 选项列表"
           :key="索引"
           @click="处理答案选择(选项)"
           v-html="renderMarkdown(选项)"
-        ></button>
+        ></mdui-button>
       </div>
     </div>
   </div>
@@ -133,7 +136,8 @@ import MarkdownIt from 'markdown-it'
 import markdownItKatex from 'markdown-it-katex'
 import 'katex/dist/katex.min.css' // KaTeX 样式
 import {type Card, useDataStore} from '@/stores/datastores.ts'
-
+import 'mdui/mdui.css';
+import 'mdui';
 const md = new MarkdownIt({html: true}).use(markdownItKatex)
 
 function renderMarkdown(text: string): string {
@@ -146,6 +150,8 @@ const 新题目 = ref('')
 const 新答案 = ref('')
 const 学习模式 = ref(false)
 const 数据源 = ref<Card[]>(数据仓库.dataSource || [])
+let 已完成数量 = ref(0)
+let 数据源总量 = ref(1)
 const 当前卡片组 = ref<Card[]>([])
 const 当前题目 = ref<Card | null>(null)
 const 选项列表 = ref<string[]>([])
@@ -201,24 +207,38 @@ async function 导出到剪贴板() {
 async function 从剪贴板导入() {
   try {
     const 文本 = await navigator.clipboard.readText()
-    const 数据 = JSON.parse(文本) as Card[]
-    if (!Array.isArray(数据) || 数据.some(item => !item.题目 || !item.答案 || typeof item.记忆标记 !== 'number')) {
-      throw new Error('数据格式不正确')
+    const 数据 = JSON.parse(文本) as Partial<Card>[]
+
+    // 数据清洗与默认值填充
+    const 清洗后数据 = 数据
+      .filter(item => item.题目 && item.答案)
+      .map(item => ({
+        题目: item.题目!,
+        答案: item.答案!,
+        记忆标记: typeof item.记忆标记 === 'number' ? item.记忆标记 : 3
+      }))
+
+    if (清洗后数据.length === 0) {
+      throw new Error('数据中没有有效卡片')
     }
-    数据源.value = 数据
+
+    数据源.value = 清洗后数据 as Card[]
     保存到本地存储()
     开始学习()
   } catch (错误) {
     console.error('导入失败:', 错误)
-    alert('剪贴板内容无效或非JSON格式')
+    alert(`导入失败: ${错误.message}`)
   }
 }
+
 
 function 开始学习() {
   if (数据源.value.length === 0) {
     alert('请先添加题目')
     return
   }
+  已完成数量.value = 1
+  数据源总量.value = 数据源.value.length
   学习模式.value = true
   重置学习状态()
 }
@@ -256,6 +276,7 @@ function 处理答案选择(选择的答案: string) {
   if (是否正确) {
     当前卡片.记忆标记 = (当前卡片.记忆标记 || 3) - 1
     if (当前卡片.记忆标记 <= 0) {
+      已完成数量.value+=1
       当前卡片组.value.shift()
     } else {
       当前卡片组.value.push(当前卡片组.value.shift()!)
@@ -271,6 +292,8 @@ function 处理答案选择(选择的答案: string) {
     alert('所有卡片已完成！')
     载入数据()
     学习模式.value = false
+    数据源总量.value = 1
+    已完成数量.value = 0
   }
   生成选项()
 }
