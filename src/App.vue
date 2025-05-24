@@ -100,15 +100,15 @@ button > p {
     <div v-if="!学习模式">
       <h1>Maybe</h1>
       <mdui-card>
-        <mdui-text-field v-model="新题目" label="输入题目（支持Markdown）"/>
-        <mdui-text-field v-model="新答案" label="输入答案（支持Markdown）"/>
+        <mdui-text-field @input="新题目 = $event.target.value" label="输入题目（支持Markdown）"/>
+        <mdui-text-field @input="新答案 = $event.target.value" label="输入答案（支持Markdown）"/>
       </mdui-card>
       <div class="首页按钮">
-        <mdui-button @click="开始学习">开始学习</mdui-button>
-        <mdui-button @click="添加数据源">添加</mdui-button>
-        <mdui-button @click="导出到剪贴板">导出到剪贴板</mdui-button>
-        <mdui-button @click="从剪贴板导入">导入数据源</mdui-button>
-        <mdui-button @click="清空数据源">清空数据源</mdui-button>
+        <mdui-button @click="开始学习()">开始学习</mdui-button>
+        <mdui-button @click="添加数据源()">添加</mdui-button>
+        <mdui-button @click="导出到剪贴板()">导出到剪贴板</mdui-button>
+        <mdui-button @click="从剪贴板导入()">导入数据源</mdui-button>
+        <mdui-button @click="清空数据源()">清空数据源</mdui-button>
       </div>
     </div>
 
@@ -132,12 +132,16 @@ button > p {
 
 <script lang="ts" setup>
 import {onMounted, ref} from 'vue'
+
+// 修改 App.vue 的 import 部分
 import MarkdownIt from 'markdown-it'
 import markdownItKatex from 'markdown-it-katex'
-import 'katex/dist/katex.min.css' // KaTeX 样式
+import 'katex/dist/katex.min.css'
+
 import {type Card, useDataStore} from '@/stores/datastores.ts'
 import 'mdui/mdui.css';
 import 'mdui';
+import {snackbar} from "mdui";
 const md = new MarkdownIt({html: true}).use(markdownItKatex)
 
 function renderMarkdown(text: string): string {
@@ -178,18 +182,23 @@ function 清空数据源() {
   if (confirm('确定要清空数据源吗？')) {
     数据源.value = []
     保存到本地存储()
+    snackbar({
+      message: '数据已清空',
+    })
   }
 }
 
+
 function 添加数据源() {
-  if (新题目.value.trim() && 新答案.value.trim()) {
+  console.log(新题目,新答案)
+  if (新题目.value && 新答案.value) {
     const 新项目: Card = {
       题目: 新题目.value,
       答案: 新答案.value,
       记忆标记: 1
     }
-    数据源.value.push(新项目)
     保存到本地存储()
+    数据源.value.push(新项目)
     新题目.value = ''
     新答案.value = ''
   }
@@ -225,9 +234,12 @@ async function 从剪贴板导入() {
     数据源.value = 清洗后数据 as Card[]
     保存到本地存储()
     开始学习()
+    snackbar({
+      message: '导入成功',
+    })
   } catch (错误) {
     console.error('导入失败:', 错误)
-    alert(`导入失败: ${错误.message}`)
+    alert(`导入失败: ${错误}`)
   }
 }
 
@@ -283,7 +295,7 @@ function 处理答案选择(选择的答案: string) {
     }
   } else {
     alert('答案错误！')
-    if (当前卡片?.记忆标记 + 1 <= 3) {
+    if (当前卡片.记忆标记!==undefined && 当前卡片.记忆标记 + 1 <= 3) {
       当前卡片.记忆标记++
     }
     当前卡片组.value.push(当前卡片组.value.shift()!)
